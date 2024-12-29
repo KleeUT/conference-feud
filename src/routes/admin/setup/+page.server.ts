@@ -1,18 +1,28 @@
 import { fail } from '@sveltejs/kit';
-import { FileBackedGameStateRepository, GameService } from '$lib/services';
+import {
+	FileBackedGameStateRepository,
+	FileBackedQuestionRepository,
+	GameService
+} from '$lib/services';
 import type { Actions, PageServerLoad } from './$types';
 import { QuestionId } from '$lib/types/question-id';
 
 function setup(): { service: GameService } {
 	const repository = new FileBackedGameStateRepository();
-	const service = new GameService(repository);
+	const questionRepository = new FileBackedQuestionRepository();
+	const service = new GameService(repository, questionRepository);
 	return { service };
 }
 
 export const load: PageServerLoad = async () => {
 	const { service } = setup();
-	const gameState = await service.fullState();
-	return { gameState };
+	const questions = await service.allQuestions();
+	return {
+		questions: questions.map((x) => ({
+			...x,
+			id: x.id.toJSON()
+		}))
+	};
 };
 
 export const actions = {
@@ -25,6 +35,7 @@ export const actions = {
 		}
 		await service.addQuestion(questionText);
 	},
+
 	deleteQuestion: async (event) => {
 		const { service } = setup();
 

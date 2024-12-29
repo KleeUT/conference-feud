@@ -1,25 +1,27 @@
 import { CouldBeAnError } from '../types/could-be-an-error';
 import { newUUID } from '$lib/utils/uuid';
-import type { Answer, GameState, Question } from '../types/game-state';
+import type { Answer, Question } from '../types/game-state';
 import { QuestionId } from '../types/question-id';
 import type { GameStateRepository } from './game-state-repository';
+import type { FileBackedQuestionRepository } from './question-repository';
 export class GameService {
-	constructor(private readonly gameStateRepository: GameStateRepository) {}
+	constructor(
+		private readonly gameStateRepository: GameStateRepository,
+		private readonly questionRepository: FileBackedQuestionRepository
+	) {}
 
-	async fullState(): Promise<GameState> {
-		const gameState = await this.gameStateRepository.load();
-		return gameState;
-	}
+	// async fullState(): Promise<GameState> {
+	// 	const gameState = await this.gameStateRepository.load();
+	// 	return gameState;
+	// }
 
 	async allQuestions(): Promise<Array<Question>> {
-		const gameState = await this.gameStateRepository.load();
-		const questions = gameState.questions || [];
+		const questions = this.questionRepository.getAllQuestions();
 		return questions;
 	}
 
 	async question(questionId: QuestionId): Promise<CouldBeAnError<Question>> {
-		const gameState = await this.gameStateRepository.load();
-		const questions = gameState.questions || [];
+		const questions = await this.questionRepository.getAllQuestions();
 		const question = questions.find((x) => QuestionId.areEqual(x.id, questionId));
 		if (question) {
 			return CouldBeAnError.withValue<Question>(question);
@@ -28,26 +30,23 @@ export class GameService {
 	}
 
 	async addQuestion(text: string): Promise<QuestionId> {
-		const gameState = await this.gameStateRepository.load();
-		const questions = gameState.questions || [];
 		const questionId = new QuestionId(newUUID());
-		questions.push({ id: questionId, answers: [], text });
-		gameState.questions = questions;
-		this.gameStateRepository.save(gameState);
+		const allQuestions = this.questionRepository.getAllQuestions();
+		await this.questionRepository.storeQuestion({
+			id: questionId,
+			surveyOrder: (await allQuestions).length + 1,
+			text
+		});
 		return questionId;
 	}
 
 	async deleteQuestion(questionId: QuestionId) {
-		const gameState = await this.gameStateRepository.load();
-		const questions = gameState.questions || [];
-		const index = questions.findIndex((x) => QuestionId.areEqual(questionId, x.id));
-		gameState.questions = questions.toSpliced(index, 1);
-		this.gameStateRepository.save(gameState);
+		await this.questionRepository.deleteQuestion(questionId);
 	}
 
 	async addAnswer(questionId: QuestionId, answer: Answer): Promise<CouldBeAnError<never>> {
 		const gameState = await this.gameStateRepository.load();
-		const question = gameState.questions.find((x) => QuestionId.areEqual(x.id, questionId));
+		const question = gameState.questions.find((x) => x.id.value === questionId.value);
 		if (!question) {
 			return CouldBeAnError.withError<never>(new Error(`No question for ${questionId.value}`));
 		}

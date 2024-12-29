@@ -10,7 +10,7 @@ export interface GameStateRepository {
 export class FileBackedGameStateRepository implements GameStateRepository {
 	private file: string;
 	constructor() {
-		this.file = join(__dirname, 'data', 'data.json');
+		this.file = join(process.cwd(), 'data', 'data.json');
 	}
 	async save(state: GameState): Promise<void> {
 		const stringState = JSON.stringify(state);

@@ -6,7 +6,7 @@
 	import Heading from '$lib/components/heading.svelte';
 	import QuestionListItem from './question-list-item.svelte';
 	const { data }: { data: PageData } = $props();
-	const gameState = data.gameState;
+	const questions = data.questions;
 </script>
 
 <Popover popover={'auto'} id="questionedit">
@@ -16,7 +16,7 @@
 <main>
 	<Heading level="1">Setup game</Heading>
 	<Button popovertarget="questionedit">New Question</Button>
-	{#each gameState.questions as question}
+	{#each questions as question}
 		<QuestionListItem text={question.text} id={question.id.value} />
 	{/each}
 </main>

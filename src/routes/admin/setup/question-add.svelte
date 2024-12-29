@@ -4,7 +4,7 @@
 </script>
 
 <form class="question-add" method="post" action="?/addQuestion">
-	<TextInput value="Text Input" label="Question:" name="questionText" />
+	<TextInput placeholder="It's a me question?" label="Question:" name="questionText" />
 	<div class="mt1"></div>
 	<Button>Add Question</Button>
 </form>

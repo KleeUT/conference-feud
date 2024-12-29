@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { HTMLInputAttributes } from 'svelte/elements';
 	interface Props {
-		value: string;
+		value?: string;
 		placeholder?: string;
 		label?: string;
 	}
