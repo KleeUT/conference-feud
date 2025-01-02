@@ -1,41 +1,70 @@
 import {
-	FileBackedGameStateRepository,
 	FileBackedQuestionRepository,
 	FileBackedSurveyRepository,
-	GameService,
 	SurveyService
 } from '$lib/services';
+import { SurveyId } from '$lib/types/survey-id';
 import { newUUID } from '$lib/utils/uuid';
+import { fail } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 
-const surveyIdCookie = 'surveyId';
+const surveyIdCookieKey = 'surveyId';
 
-function setup(): { gameService: GameService; surveyService: SurveyService } {
-	const repository = new FileBackedGameStateRepository();
+function setup(): { surveyService: SurveyService } {
 	const questionRepository = new FileBackedQuestionRepository();
-	const gameService = new GameService(repository, questionRepository);
 	const surveyRepository = new FileBackedSurveyRepository();
 	const surveyService = new SurveyService(surveyRepository, questionRepository);
-	return { gameService, surveyService };
+	return { surveyService };
 }
 
 export const load: PageServerLoad = async (event) => {
-	const { gameService } = setup();
-	const surveyId = event.cookies.get(surveyIdCookie);
-	if (!surveyId) {
-		const id = newUUID();
-		event.cookies.set(surveyIdCookie, id, { path: '/', httpOnly: true });
+	const { surveyService } = setup();
+	let surveyIdCookieValue = event.cookies.get(surveyIdCookieKey);
+	if (!surveyIdCookieValue) {
+		surveyIdCookieValue = newUUID();
+		event.cookies.set(surveyIdCookieKey, surveyIdCookieValue, { path: '/', httpOnly: true });
 	}
+	const surveyId = new SurveyId(surveyIdCookieValue);
+	const questions = await surveyService.questionsForSurvey(surveyId);
 
-	const questions = await gameService.allQuestions();
+	const pojoQestions = questions.map((x) => ({
+		...x,
+		questionId: x.questionId.value
+	}));
+	const remainingQuestions = pojoQestions
+		.sort((a, b) => a.surveyOrder - b.surveyOrder)
+		.filter((x) => x.answer === undefined);
+
 	return {
-		questions: questions.map((x) => ({
-			...x,
-			id: x.id.toJSON()
-		}))
+		surveyId: surveyId.value,
+		question: remainingQuestions[0],
+		hasNextQuestion: remainingQuestions.length > 1
 	};
 };
 
 export const actions: Actions = {
-	setResult: (event) => {}
+	default: async (event) => {
+		const data = await event.request.formData();
+		const answer = data.get('answer');
+		const questionId = data.get('questionId');
+		const surveyIdCookieValue = event.cookies.get(surveyIdCookieKey);
+		if (!surveyIdCookieValue) {
+			return fail(401, { error: 'no cookie' });
+		}
+		if (!answer) {
+			return fail(400, { answer, mising: true, error: 'Missing answer' });
+		}
+		if (!questionId) {
+			return fail(400, { questionId, mising: true, error: 'Missing questionId' });
+		}
+		if (answer.length > 100) {
+			return fail(400, { answer, error: 'Answer length too long' });
+		}
+		const { surveyService } = setup();
+		await surveyService.storeAnswer({
+			surveyId: surveyIdCookieValue,
+			questionId: questionId.toString(),
+			answer: answer.toString()
+		});
+	}
 };
