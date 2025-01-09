@@ -1,7 +1,7 @@
 import { QuestionId } from '$lib/types/question-id';
 import { SurveyId } from '$lib/types/survey-id';
-import type { FileBackedQuestionRepository } from './question-repository';
-import type { FileBackedSurveyRepository } from './survey-repository';
+import type { QuestionRepository } from './question-repository';
+import type { SurveyRepository } from './survey-repository';
 export interface SurveyQuestionViewModel {
 	questionText: string;
 	questionId: QuestionId;
@@ -11,8 +11,8 @@ export interface SurveyQuestionViewModel {
 
 export class SurveyService {
 	constructor(
-		private readonly surveyRepository: FileBackedSurveyRepository,
-		private readonly questionRepository: FileBackedQuestionRepository
+		private readonly surveyRepository: SurveyRepository,
+		private readonly questionRepository: QuestionRepository
 	) {}
 
 	async questionsForSurvey(surveyId: SurveyId): Promise<Array<SurveyQuestionViewModel>> {

@@ -3,11 +3,11 @@ import { newUUID } from '$lib/utils/uuid';
 import type { Answer, Question } from '../types/game-state';
 import { QuestionId } from '../types/question-id';
 import type { GameStateRepository } from './game-state-repository';
-import type { FileBackedQuestionRepository } from './question-repository';
+import type { QuestionRepository } from './question-repository';
 export class GameService {
 	constructor(
 		private readonly gameStateRepository: GameStateRepository,
-		private readonly questionRepository: FileBackedQuestionRepository
+		private readonly questionRepository: QuestionRepository
 	) {}
 
 	// async fullState(): Promise<GameState> {

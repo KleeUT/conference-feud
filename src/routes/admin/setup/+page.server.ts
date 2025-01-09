@@ -1,15 +1,11 @@
 import { fail } from '@sveltejs/kit';
-import {
-	FileBackedGameStateRepository,
-	FileBackedQuestionRepository,
-	GameService
-} from '$lib/services';
+import { NoOpGameStateRepository, NoOpQuestionRepository, GameService } from '$lib/services';
 import type { Actions, PageServerLoad } from './$types';
 import { QuestionId } from '$lib/types/question-id';
 
 function setup(): { service: GameService } {
-	const repository = new FileBackedGameStateRepository();
-	const questionRepository = new FileBackedQuestionRepository();
+	const repository = new NoOpGameStateRepository();
+	const questionRepository = new NoOpQuestionRepository();
 	const service = new GameService(repository, questionRepository);
 	return { service };
 }

@@ -1,8 +1,4 @@
-import {
-	FileBackedQuestionRepository,
-	FileBackedSurveyRepository,
-	SurveyService
-} from '$lib/services';
+import { NoOpQuestionRepository, NoOpSurveyRepository, SurveyService } from '$lib/services';
 import { SurveyId } from '$lib/types/survey-id';
 import { newUUID } from '$lib/utils/uuid';
 import { fail } from '@sveltejs/kit';
@@ -11,8 +7,8 @@ import type { Actions, PageServerLoad } from './$types';
 const surveyIdCookieKey = 'surveyId';
 
 function setup(): { surveyService: SurveyService } {
-	const questionRepository = new FileBackedQuestionRepository();
-	const surveyRepository = new FileBackedSurveyRepository();
+	const questionRepository = new NoOpQuestionRepository();
+	const surveyRepository = new NoOpSurveyRepository();
 	const surveyService = new SurveyService(surveyRepository, questionRepository);
 	return { surveyService };
 }
@@ -45,7 +41,7 @@ export const load: PageServerLoad = async (event) => {
 export const actions: Actions = {
 	default: async (event) => {
 		const data = await event.request.formData();
-		const answer = data.get('answer');
+		const answer = data.get('answer')?.toString();
 		const questionId = data.get('questionId');
 		const surveyIdCookieValue = event.cookies.get(surveyIdCookieKey);
 		if (!surveyIdCookieValue) {

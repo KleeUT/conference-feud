@@ -1,5 +1,5 @@
 {
-	"name": "familyfeud",
+	"name": "conference-feud",
 	"private": true,
 	"version": "0.0.1",
 	"type": "module",
@@ -12,11 +12,15 @@
 		"format": "prettier --write .",
 		"lint": "prettier --check . && eslint .",
 		"test:unit": "vitest",
-		"test": "npm run test:unit -- --run"
+		"test": "npm run test:unit -- --run",
+		"cf-typegen": "wrangler types && mv worker-configuration.d.ts src/",
+		"wrangler:deploy": "npm run build && wrangler pages deploy",
+		"wrangler:dev": "wrangler pages dev"
 	},
 	"devDependencies": {
 		"@eslint/compat": "^1.2.3",
 		"@sveltejs/adapter-auto": "^3.0.0",
+		"@sveltejs/adapter-cloudflare": "^5.0.0",
 		"@sveltejs/kit": "^2.0.0",
 		"@sveltejs/vite-plugin-svelte": "^4.0.0",
 		"eslint": "^9.7.0",
@@ -30,6 +34,7 @@
 		"typescript": "^5.0.0",
 		"typescript-eslint": "^8.0.0",
 		"vite": "^5.4.11",
-		"vitest": "^2.0.4"
+		"vitest": "^2.0.4",
+		"wrangler": "^3.99.0"
 	}
 }

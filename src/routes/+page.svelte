@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 	import Board from './board.svelte';
 	import ScoreBoard from './score-board.svelte';
 </script>
