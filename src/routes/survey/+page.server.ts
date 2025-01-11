@@ -1,20 +1,13 @@
-import { NoOpQuestionRepository, NoOpSurveyRepository, SurveyService } from '$lib/services';
 import { SurveyId } from '$lib/types/survey-id';
 import { newUUID } from '$lib/utils/uuid';
 import { fail } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
+import { setup } from '../context';
 
 const surveyIdCookieKey = 'surveyId';
 
-function setup(): { surveyService: SurveyService } {
-	const questionRepository = new NoOpQuestionRepository();
-	const surveyRepository = new NoOpSurveyRepository();
-	const surveyService = new SurveyService(surveyRepository, questionRepository);
-	return { surveyService };
-}
-
 export const load: PageServerLoad = async (event) => {
-	const { surveyService } = setup();
+	const { surveyService } = setup(event.platform);
 	let surveyIdCookieValue = event.cookies.get(surveyIdCookieKey);
 	if (!surveyIdCookieValue) {
 		surveyIdCookieValue = newUUID();
@@ -56,7 +49,7 @@ export const actions: Actions = {
 		if (answer.length > 100) {
 			return fail(400, { answer, error: 'Answer length too long' });
 		}
-		const { surveyService } = setup();
+		const { surveyService } = setup(event.platform);
 		await surveyService.storeAnswer({
 			surveyId: surveyIdCookieValue,
 			questionId: questionId.toString(),
