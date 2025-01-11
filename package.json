@@ -15,7 +15,7 @@
 		"test": "npm run test:unit -- --run",
 		"cf-typegen": "wrangler types && mv worker-configuration.d.ts src/",
 		"wrangler:deploy": "npm run build && wrangler pages deploy",
-		"wrangler:dev": "wrangler pages dev"
+		"wrangler:dev": "yarn build && wrangler pages dev"
 	},
 	"devDependencies": {
 		"@cloudflare/workers-types": "^4.20250109.0",

@@ -1,6 +1,6 @@
 import { QuestionId } from '$lib/services/question/question-id';
 import { SurveyId } from '$lib/types/survey-id';
-import type { QuestionRepository } from './question/question-repository';
+import type { QuestionService } from '../question';
 import type { SurveyRepository } from './survey-repository';
 export interface SurveyQuestionViewModel {
 	questionText: string;
@@ -12,7 +12,7 @@ export interface SurveyQuestionViewModel {
 export class SurveyService {
 	constructor(
 		private readonly surveyRepository: SurveyRepository,
-		private readonly questionRepository: QuestionRepository
+		private readonly questionService: QuestionService
 	) {}
 
 	async questionsForSurvey(surveyId: SurveyId): Promise<Array<SurveyQuestionViewModel>> {
@@ -21,7 +21,7 @@ export class SurveyService {
 			throw survey.error;
 		}
 		const responses = survey.value;
-		const allQuestions = await this.questionRepository.getAllQuestions();
+		const allQuestions = await this.questionService.allQuestions();
 		const viewModels: Array<SurveyQuestionViewModel> = allQuestions.map((x) => ({
 			questionId: x.id,
 			surveyOrder: x.surveyOrder,
