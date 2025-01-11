@@ -5,11 +5,8 @@ import { join } from 'path';
 import { readFile, writeFile } from 'fs/promises';
 import { mkdirSync, existsSync } from 'fs';
 import { QuestionId } from '$lib/services/question/question-id';
+import type { SurveyResponse } from './survey-response';
 
-export interface SurveyResponse {
-	questionId: QuestionId;
-	answer?: string;
-}
 export interface StoredSurveyResponse {
 	questionId: string;
 	answer?: string;
