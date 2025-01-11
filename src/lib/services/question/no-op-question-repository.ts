@@ -1,5 +1,5 @@
-import type { Question } from '$lib/types/game-state';
-import type { QuestionId } from '$lib/types/question-id';
+import type { Question } from './question';
+import type { QuestionId } from '$lib/services/question/question-id';
 import type { QuestionRepository } from './question-repository';
 
 export class NoOpQuestionRepository implements QuestionRepository {

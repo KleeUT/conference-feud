@@ -1,5 +1,5 @@
-import type { Question as SurveyQuestion } from '$lib/types/game-state';
-import { QuestionId } from '$lib/types/question-id';
+import type { Question as SurveyQuestion } from '$lib/services/question/question';
+import { QuestionId } from '$lib/services/question/question-id';
 import { join } from 'path';
 import { readFile, writeFile } from 'fs/promises';
 import { existsSync } from 'fs';

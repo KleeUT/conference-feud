@@ -1,4 +1,4 @@
-import type { QuestionId } from './question-id';
+import type { QuestionId } from '../services/question/question-id';
 
 export interface Team {
 	name: string;
@@ -10,12 +10,6 @@ export interface Answer {
 	value: number;
 	displayOrder: number;
 	exposed: boolean;
-}
-
-export interface Question {
-	id: QuestionId;
-	text: string;
-	surveyOrder: number;
 }
 
 export interface GameQuestion {

@@ -1,17 +1,21 @@
 import { fail } from '@sveltejs/kit';
-import { NoOpGameStateRepository, NoOpQuestionRepository, GameService } from '$lib/services';
-import type { Actions, PageServerLoad } from './$types';
-import { QuestionId } from '$lib/types/question-id';
+import { QuestionService } from '$lib/services';
+import type { Actions, PageServerLoad, RequestEvent } from './$types';
+import { QuestionId } from '$lib/services/question/question-id';
+import { D1QuestionRepository } from '$lib/services/question/d1-question-repository';
 
-function setup(): { service: GameService } {
-	const repository = new NoOpGameStateRepository();
-	const questionRepository = new NoOpQuestionRepository();
-	const service = new GameService(repository, questionRepository);
+function setup(event: RequestEvent): { service: QuestionService } {
+	const env = event.platform?.env;
+	if (!env) {
+		throw new Error('nope');
+	}
+	const questionRepository = new D1QuestionRepository(env.DB);
+	const service = new QuestionService(questionRepository);
 	return { service };
 }
 
-export const load: PageServerLoad = async () => {
-	const { service } = setup();
+export const load: PageServerLoad = async (event) => {
+	const { service } = setup(event);
 	const questions = await service.allQuestions();
 	return {
 		questions: questions.map((x) => ({
@@ -23,7 +27,8 @@ export const load: PageServerLoad = async () => {
 
 export const actions = {
 	addQuestion: async (event) => {
-		const { service } = setup();
+		console.log('Adding question');
+		const { service } = setup(event);
 		const data = await event.request.formData();
 		const questionText = data.get('questionText')?.valueOf() as string | undefined;
 		if (!questionText) {
@@ -33,7 +38,7 @@ export const actions = {
 	},
 
 	deleteQuestion: async (event) => {
-		const { service } = setup();
+		const { service } = setup(event);
 
 		const data = await event.request.formData();
 		const questionId = data.get('questionId')?.valueOf() as string | undefined;

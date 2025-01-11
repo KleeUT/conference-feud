@@ -18,6 +18,7 @@
 		"wrangler:dev": "wrangler pages dev"
 	},
 	"devDependencies": {
+		"@cloudflare/workers-types": "^4.20250109.0",
 		"@eslint/compat": "^1.2.3",
 		"@sveltejs/adapter-auto": "^3.0.0",
 		"@sveltejs/adapter-cloudflare": "^5.0.0",

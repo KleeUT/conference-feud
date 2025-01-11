@@ -1,6 +1,4 @@
 <script lang="ts">
-	import { QuestionId } from '$lib/types/question-id';
-
 	interface Props {
 		text: string;
 		id: string;

@@ -25,6 +25,23 @@ npm run dev
 npm run dev -- --open
 ```
 
+### Local database set up
+
+#### Create database
+
+```
+npx wrangler d1 create conference-feud-db
+```
+
+#### Populate database
+
+Run scripts for all tables in local
+
+```
+npx wrangler d1 execute conference-feud-db --local --file=./schemas/01_question_table.sql
+npx wrangler d1 execute conference-feud-db --local --file=./schemas/02_survey_table.sql
+```
+
 ## Building
 
 To create a production version of your app:

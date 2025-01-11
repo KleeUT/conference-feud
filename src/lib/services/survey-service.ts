@@ -1,6 +1,6 @@
-import { QuestionId } from '$lib/types/question-id';
+import { QuestionId } from '$lib/services/question/question-id';
 import { SurveyId } from '$lib/types/survey-id';
-import type { QuestionRepository } from './question-repository';
+import type { QuestionRepository } from './question/question-repository';
 import type { SurveyRepository } from './survey-repository';
 export interface SurveyQuestionViewModel {
 	questionText: string;

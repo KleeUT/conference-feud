@@ -4,7 +4,7 @@ import { join } from 'path';
 
 import { readFile, writeFile } from 'fs/promises';
 import { mkdirSync, existsSync } from 'fs';
-import { QuestionId } from '$lib/types/question-id';
+import { QuestionId } from '$lib/services/question/question-id';
 
 export interface SurveyResponse {
 	questionId: QuestionId;
