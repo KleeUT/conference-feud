@@ -7,11 +7,14 @@ export interface SurveyRepository {
 	store({
 		surveyId,
 		questionId,
-		answer
+		answer,
+		submissionTime
 	}: {
 		surveyId: SurveyId;
 		questionId: QuestionId;
 		answer: string;
+		submissionTime: Date;
 	}): Promise<CouldBeAnError<void>>;
 	load(surveyId: SurveyId): Promise<CouldBeAnError<Array<SurveyResponse>>>;
+	loadAll(): Promise<CouldBeAnError<Array<SurveyResponse>>>;
 }
