@@ -46,7 +46,7 @@ export const actions: Actions = {
 		if (!questionId) {
 			return fail(400, { questionId, mising: true, error: 'Missing questionId' });
 		}
-		if (answer.length > 100) {
+		if (answer.length > 50) {
 			return fail(400, { answer, error: 'Answer length too long' });
 		}
 		const { surveyService } = setup(event.platform);

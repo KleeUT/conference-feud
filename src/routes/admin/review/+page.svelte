@@ -8,7 +8,7 @@
 <div class="container">
 	<section>
 		<Heading level="1" size="2">{data.question.questionText}</Heading>
-		<div class="question_nav">
+		<nav class="question_nav">
 			{#if data.previousQuestion}
 				<span>
 					<a href="/admin/review?questionId={data.previousQuestion.questionId}">
@@ -24,7 +24,21 @@
 					</a>
 				</span>
 			{/if}
-		</div>
+		</nav>
+		<section>
+			<Heading level="2" size="4">Top categories</Heading>
+			<div class="categories">
+				<div class="category"><span>Category 1 </span><span> 80</span></div>
+				<div class="category"><span>Category 2 </span><span> 65</span></div>
+				<div class="category"><span>Category 3 </span><span> 53</span></div>
+				<div class="category"><span>Category 4 </span><span> 45</span></div>
+				<div class="category"><span>Category 5 </span><span> 30</span></div>
+				<div class="category"><span>Category 6 </span><span> 20</span></div>
+				<div class="category"><span>Category 7 </span><span> 10</span></div>
+				<div class="category"><span>Category 8 </span><span> 8</span></div>
+			</div>
+		</section>
+		<hr />
 		<table>
 			<thead>
 				<tr>
@@ -57,5 +71,19 @@
 		background-color: darkblue;
 		height: 100vh;
 		padding: 1rem;
+	}
+	.categories {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		width: 80%;
+		margin: auto;
+		gap: 0.5rem;
+	}
+	.category {
+		display: flex;
+		justify-content: space-between;
+		padding: 0.5rem;
+		border: 2px solid yellow;
+		border-radius: 0.2rem;
 	}
 </style>
