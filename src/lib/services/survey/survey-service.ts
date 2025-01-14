@@ -9,10 +9,10 @@ export interface SurveyQuestionViewModel {
 	surveyOrder: number;
 }
 
-export type AggregatedSurveyQuestions = Array<{
+export type AggregatedSurveyQuestion = {
 	questionId: QuestionId;
 	answers: Array<{ answer: string; count: number }>;
-}>;
+};
 
 export class SurveyService {
 	constructor(
@@ -36,12 +36,12 @@ export class SurveyService {
 		return viewModels;
 	}
 
-	async allResponses(): Promise<AggregatedSurveyQuestions> {
+	async allResponses(): Promise<Array<AggregatedSurveyQuestion>> {
 		const rawResponses = await this.surveyRepository.loadAll();
 		if (rawResponses.isError) {
 			throw rawResponses.error;
 		}
-		return rawResponses.value.reduce<AggregatedSurveyQuestions>((acc, response) => {
+		return rawResponses.value.reduce<Array<AggregatedSurveyQuestion>>((acc, response) => {
 			if (!response.answer) {
 				return acc;
 			}
@@ -51,7 +51,7 @@ export class SurveyService {
 				if (answerIndex !== -1) {
 					acc[index].answers[answerIndex].count++;
 				} else {
-					acc[index].answers[answerIndex] = { answer: response.answer, count: 1 };
+					acc[index].answers.push({ answer: response.answer, count: 1 });
 				}
 			} else {
 				const question = {
@@ -60,6 +60,7 @@ export class SurveyService {
 				};
 				acc.push(question);
 			}
+
 			return acc;
 		}, []);
 	}

@@ -16,7 +16,6 @@ export const load: PageServerLoad = async (event) => {
 
 export const actions = {
 	addQuestion: async (event) => {
-		console.log('Adding question');
 		const { questionService } = setup(event.platform);
 		const data = await event.request.formData();
 		const questionText = data.get('questionText')?.valueOf() as string | undefined;
