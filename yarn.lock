@@ -560,6 +560,11 @@
     "@jridgewell/resolve-uri" "^3.1.0"
     "@jridgewell/sourcemap-codec" "^1.4.14"
 
+"@microsoft/fetch-event-source@^2.0.1":
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/@microsoft/fetch-event-source/-/fetch-event-source-2.0.1.tgz#9ceecc94b49fbaa15666e38ae8587f64acce007d"
+  integrity sha512-W6CLUJ2eBMw3Rec70qrsEW0jOm/3twwJv21mrmj2yORiaVmVYGS4sSS5yUwvQc1ZlDLYGPnClVWmUUMagKNsfA==
+
 "@nodelib/fs.scandir@2.1.5":
   version "2.1.5"
   resolved "https://registry.yarnpkg.com/@nodelib/fs.scandir/-/fs.scandir-2.1.5.tgz#7619c2eb21b25483f6d167548b4cfd5a7488c3d5"
@@ -2162,6 +2167,11 @@ svelte@^5.0.0:
     locate-character "^3.0.0"
     magic-string "^0.30.11"
     zimmerframe "^1.1.2"
+
+sveltekit-sse@^0.13.12:
+  version "0.13.12"
+  resolved "https://registry.yarnpkg.com/sveltekit-sse/-/sveltekit-sse-0.13.12.tgz#850b322f897e2d1d3e71f57cf0962adb73a6a2d1"
+  integrity sha512-rxwggmeKTQpwmaiigW/aQ/OhXmAB8NkXXFN5C9K5hx//H7BTDYzl5Gtdc4MaofQJV3IlJ/gXu/dx1pdIOWHOXw==
 
 tiny-glob@^0.2.9:
   version "0.2.9"
