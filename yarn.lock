@@ -2168,6 +2168,11 @@ svelte@^5.0.0:
     magic-string "^0.30.11"
     zimmerframe "^1.1.2"
 
+sveltekit-sse@^0.13.12:
+  version "0.13.12"
+  resolved "https://registry.yarnpkg.com/sveltekit-sse/-/sveltekit-sse-0.13.12.tgz#850b322f897e2d1d3e71f57cf0962adb73a6a2d1"
+  integrity sha512-rxwggmeKTQpwmaiigW/aQ/OhXmAB8NkXXFN5C9K5hx//H7BTDYzl5Gtdc4MaofQJV3IlJ/gXu/dx1pdIOWHOXw==
+
 tiny-glob@^0.2.9:
   version "0.2.9"
   resolved "https://registry.yarnpkg.com/tiny-glob/-/tiny-glob-0.2.9.tgz#2212d441ac17928033b110f8b3640683129d31e2"

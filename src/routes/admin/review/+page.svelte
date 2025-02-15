@@ -1,8 +1,8 @@
 <script lang="ts">
 	import Heading from '$lib/components/heading.svelte';
 	import Margin from '$lib/components/margin.svelte';
-	import TextInput from '$lib/components/text-input.svelte';
 	import Category from './category.svelte';
+	import AnswerMappingDisplay from './answer-mapping-display.svelte';
 
 	const { data } = $props();
 </script>
@@ -28,23 +28,7 @@
 	</nav>
 	<Margin marginTop="1">
 		<section class="main">
-			<table>
-				<thead>
-					<tr>
-						<th>Answer</th><th>Count</th><th>Group</th>
-					</tr>
-				</thead>
-				<tbody>
-					{#each data.question.answers as answer}
-						<tr>
-							<td>{answer.answer}</td><td>{answer.count}</td>
-							<td>
-								<TextInput value={answer.answer} />
-							</td>
-						</tr>
-					{/each}
-				</tbody>
-			</table>
+			<AnswerMappingDisplay answers={data.question.answers} questionId={data.question.questionId} />
 			<section>
 				<Heading level="2" size="4">Top categories</Heading>
 				<Margin marginTop="1">
@@ -69,6 +53,7 @@
 		display: flex;
 		justify-content: space-between;
 	}
+
 	.container {
 		width: 90vw;
 		display: flex;
@@ -78,17 +63,18 @@
 		height: 100vh;
 		padding: 1rem;
 	}
+
+	.main {
+		gap: 1rem;
+		display: grid;
+		grid-template-columns: 3fr 1fr;
+	}
+
 	.categories {
 		display: flex;
 		flex-direction: column;
 		width: 80%;
 		margin: auto;
 		gap: 0.5rem;
-	}
-
-	.main {
-		gap: 1rem;
-		display: grid;
-		grid-template-columns: 3fr 1fr;
 	}
 </style>
