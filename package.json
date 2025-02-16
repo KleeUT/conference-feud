@@ -12,9 +12,9 @@
 		"format": "prettier --write .",
 		"lint": "prettier --check . && eslint .",
 		"test:unit": "vitest",
-		"test": "npm run test:unit -- --run",
+		"test": "yarn test:unit -- --run",
 		"cf-typegen": "wrangler types && mv worker-configuration.d.ts src/",
-		"wrangler:deploy": "npm run build && wrangler pages deploy",
+		"wrangler:deploy": "yarn build && wrangler pages deploy",
 		"wrangler:dev": "yarn build && wrangler pages dev"
 	},
 	"devDependencies": {
