@@ -3,7 +3,7 @@
 
 	let data = 'not yet';
 	onMount(async () => {
-		const res = await fetch('/admin/game/api');
+		const res = await fetch('/event');
 		if (!res.ok || !res.body) {
 			data = 'http error' + res.body;
 			throw new Error(`HTTP error! status: ${res.status}`);
@@ -19,3 +19,6 @@
 </script>
 
 {data}
+<form method="post">
+	<button type="submit">submit</button>
+</form>

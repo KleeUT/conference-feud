@@ -13,7 +13,9 @@ export class ServerSentEventSender {
 		}
 		return instance;
 	}
-	async send() {
+
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	async send(data: any) {
 		console.log('Emitting message to ' + this.streams.size + ' streams');
 		await Promise.all(
 			this.streams.keys().map(async (key) => {
@@ -24,12 +26,13 @@ export class ServerSentEventSender {
 						return;
 					}
 					await stream.writable
-						.write(new TextEncoder().encode(JSON.stringify({ count: this.streams.size })))
+						.write(new TextEncoder().encode(JSON.stringify({ ...data })))
 						.catch((e) => {
 							// stream errored
 							this.streams.delete(key);
 						});
 					console.log('Wrote');
+					// eslint-disable-next-line @typescript-eslint/no-unused-vars
 				} catch (e) {
 					// stream errored
 					this.streams.delete(key);
@@ -38,6 +41,7 @@ export class ServerSentEventSender {
 		);
 	}
 	setUpResponse(): Response {
+		console.log('Setting up response');
 		const stream = new TransformStream();
 		const writable = stream.writable.getWriter();
 		const id = newUUID();
@@ -47,10 +51,12 @@ export class ServerSentEventSender {
 				// stream closed
 				this.streams.delete(id);
 			})
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 			.catch((e) => {
 				// stream errored
 				this.streams.delete(id);
 			});
+		console.log('Response set up');
 		const response = new Response(stream.readable, {
 			headers: {
 				'Content-Type': 'text/event-stream',
