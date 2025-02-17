@@ -39,7 +39,6 @@
 		"wrangler": "^3.99.0"
 	},
 	"dependencies": {
-		"@microsoft/fetch-event-source": "^2.0.1",
-		"sveltekit-sse": "^0.13.12"
+		"@microsoft/fetch-event-source": "^2.0.1"
 	}
 }
