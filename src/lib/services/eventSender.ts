@@ -27,7 +27,8 @@ export class ServerSentEventSender {
 					}
 					await stream.writable
 						.write(new TextEncoder().encode(JSON.stringify({ ...data })))
-						.catch((e) => {
+						// eslint-disable-next-line @typescript-eslint/no-unused-vars
+						.catch((_) => {
 							// stream errored
 							this.streams.delete(key);
 						});
