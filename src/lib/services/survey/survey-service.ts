@@ -9,6 +9,11 @@ export interface SurveyQuestionViewModel {
 	surveyOrder: number;
 }
 
+export type AggregatedSurveyQuestion = {
+	questionId: QuestionId;
+	answers: Array<{ answer: string; count: number; mapping?: string }>;
+};
+
 export class SurveyService {
 	constructor(
 		private readonly surveyRepository: SurveyRepository,
@@ -31,6 +36,36 @@ export class SurveyService {
 		return viewModels;
 	}
 
+	async allResponses(): Promise<Array<AggregatedSurveyQuestion>> {
+		const rawResponses = await this.surveyRepository.loadAll();
+		if (rawResponses.isError) {
+			throw rawResponses.error;
+		}
+
+		return rawResponses.value.reduce<Array<AggregatedSurveyQuestion>>((acc, response) => {
+			if (!response.answer) {
+				return acc;
+			}
+			const index = acc.findIndex((r) => r.questionId.equals(response.questionId));
+			if (index !== -1) {
+				const answerIndex = acc[index].answers.findIndex((x) => x.answer === response.answer);
+				if (answerIndex !== -1) {
+					acc[index].answers[answerIndex].count++;
+				} else {
+					acc[index].answers.push({ answer: response.answer, count: 1, mapping: response.mapping });
+				}
+			} else {
+				const question = {
+					questionId: response.questionId,
+					answers: [{ answer: response.answer, count: 1, mapping: response.mapping }]
+				};
+				acc.push(question);
+			}
+
+			return acc;
+		}, []);
+	}
+
 	async storeAnswer({
 		surveyId,
 		questionId,
@@ -43,7 +78,23 @@ export class SurveyService {
 		await this.surveyRepository.store({
 			surveyId: new SurveyId(surveyId),
 			questionId: new QuestionId(questionId),
-			answer
+			answer,
+			submissionTime: new Date()
+		});
+	}
+	async updateMapping({
+		questionId,
+		answerText,
+		newMapping
+	}: {
+		questionId: string;
+		answerText: string;
+		newMapping: string;
+	}): Promise<void> {
+		await this.surveyRepository.updateMapping({
+			questionId: new QuestionId(questionId),
+			answerText,
+			newMapping
 		});
 	}
 }

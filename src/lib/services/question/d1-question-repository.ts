@@ -5,7 +5,6 @@ import type { QuestionRepository } from './question-repository';
 export class D1QuestionRepository implements QuestionRepository {
 	constructor(private readonly db: D1Database) {}
 	async storeQuestion(question: Question): Promise<void> {
-		console.log('storing question ', question);
 		const res = await this.db
 			.prepare('INSERT INTO Question (questionId, questionText, surveyOrder) values (?,?,?)')
 			.bind(question.id.value, question.text, question.surveyOrder)
@@ -15,7 +14,6 @@ export class D1QuestionRepository implements QuestionRepository {
 		}
 	}
 	async getAllQuestions(): Promise<Array<Question>> {
-		console.log('Querying questions');
 		const res = await this.db
 			.prepare('SELECT questionId, questionText, surveyOrder FROM Question')
 			.all();
@@ -23,7 +21,6 @@ export class D1QuestionRepository implements QuestionRepository {
 			console.error(res.error);
 		}
 		return res.results.map((x) => {
-			console.log('all questions', x);
 			return {
 				id: new QuestionId(x['questionId'] as string),
 				text: x['questionText'] as string,
@@ -33,7 +30,6 @@ export class D1QuestionRepository implements QuestionRepository {
 	}
 
 	async deleteQuestion(questionId: QuestionId): Promise<void> {
-		console.log('Deleting question', questionId);
 		const res = await this.db
 			.prepare('DELETE FROM Question WHERE questionId=?')
 			.bind(questionId.value)

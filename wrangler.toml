@@ -84,7 +84,6 @@ pages_build_output_dir = ".svelte-kit/cloudflare"
 # binding = "MY_KV_NAMESPACE"
 # id = "<PRODUCTION_NAMESPACE_ID>"
 
-[env.local]
 [[d1_databases]]
 binding = "DB"
 database_name = "conference-feud-db"

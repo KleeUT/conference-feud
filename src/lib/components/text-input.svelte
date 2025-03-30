@@ -8,13 +8,16 @@
 		hidden?: boolean;
 	}
 	let {
-		value = '',
+		value = $bindable(),
 		label = '',
 		hidden = false,
 		maxLength,
 		...props
 	}: Props & HTMLInputAttributes = $props();
-	if (value && maxLength && value.length > maxLength) {
+	if (!value) {
+		value = '';
+	}
+	if (maxLength && value.length > maxLength) {
 		value = value.subString(0, maxLength);
 	}
 </script>

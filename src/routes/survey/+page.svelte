@@ -18,7 +18,7 @@
 			<form method="post">
 				<TextInput hidden name="questionId" value={question.questionId}></TextInput>
 				<Margin marginTop="1">
-					<TextInput maxLength={100} name="answer" required></TextInput>
+					<TextInput maxLength={50} name="answer" required></TextInput>
 				</Margin>
 				<Margin marginTop="1">
 					<Button>
