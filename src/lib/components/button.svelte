@@ -3,7 +3,7 @@
 	let { children, disabled, ...props }: HTMLButtonAttributes = $props();
 </script>
 
-<button disabled class={disabled ? 'disabled' : ''} {...props}>
+<button class={disabled ? 'disabled' : ''} {...props}>
 	{@render children?.()}
 </button>
 

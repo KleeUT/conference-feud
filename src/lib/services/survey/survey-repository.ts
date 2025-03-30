@@ -4,6 +4,11 @@ import type { SurveyId } from '$lib/types/survey-id';
 import type { SurveyResponse } from './survey-response';
 
 export interface SurveyRepository {
+	updateMapping(arg0: {
+		questionId: QuestionId;
+		answerText: string;
+		newMapping: string;
+	}): Promise<CouldBeAnError<void>>;
 	store({
 		surveyId,
 		questionId,

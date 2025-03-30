@@ -11,10 +11,11 @@
 		}>;
 		questionId: string;
 	}
-	const { answers }: Props = $props();
-	const answersWithMapping: Array<Props['answers'][0] & { newMapping?: string }> = answers.map(
-		(x) => ({ ...x, newMapping: 'x.mapping' })
-	);
+	const { answers, questionId }: Props = $props();
+	// const answersWithMapping: Array<Props['answers'][0] & { newMapping?: string }> = answers.map(
+	// 	(x) => ({ ...x, newMapping: x.mapping })
+	// );
+	// console.log(answersWithMapping);
 </script>
 
 <table>
@@ -24,16 +25,18 @@
 		</tr>
 	</thead>
 	<tbody>
-		{#each answersWithMapping as answer}
+		{#each answers as answer}
 			<tr>
 				<td>{answer.answer}</td><td>{answer.count}</td>
 				<td>
-					<div class="group-update">
-						<TextInput bind:value={answer.newMapping} />
-						<Button disabled={answer.newMapping === answer.mapping}
-							>{answer.newMapping === answer.mapping ? ' ' : '💾'}
-						</Button>
-					</div>
+					<form method="post">
+						<div class="group-update">
+							<TextInput value={questionId} name="questionId" hidden />
+							<TextInput value={answer.answer} name="answerText" hidden />
+							<TextInput value={answer.mapping} name="newMapping" />
+							<Button type="submit">💾</Button>
+						</div>
+					</form>
 				</td>
 			</tr>
 		{/each}

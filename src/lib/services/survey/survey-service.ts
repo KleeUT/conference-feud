@@ -11,7 +11,7 @@ export interface SurveyQuestionViewModel {
 
 export type AggregatedSurveyQuestion = {
 	questionId: QuestionId;
-	answers: Array<{ answer: string; count: number }>;
+	answers: Array<{ answer: string; count: number; mapping?: string }>;
 };
 
 export class SurveyService {
@@ -41,6 +41,7 @@ export class SurveyService {
 		if (rawResponses.isError) {
 			throw rawResponses.error;
 		}
+
 		return rawResponses.value.reduce<Array<AggregatedSurveyQuestion>>((acc, response) => {
 			if (!response.answer) {
 				return acc;
@@ -51,12 +52,12 @@ export class SurveyService {
 				if (answerIndex !== -1) {
 					acc[index].answers[answerIndex].count++;
 				} else {
-					acc[index].answers.push({ answer: response.answer, count: 1 });
+					acc[index].answers.push({ answer: response.answer, count: 1, mapping: response.mapping });
 				}
 			} else {
 				const question = {
 					questionId: response.questionId,
-					answers: [{ answer: response.answer, count: 1 }]
+					answers: [{ answer: response.answer, count: 1, mapping: response.mapping }]
 				};
 				acc.push(question);
 			}
@@ -79,6 +80,21 @@ export class SurveyService {
 			questionId: new QuestionId(questionId),
 			answer,
 			submissionTime: new Date()
+		});
+	}
+	async updateMapping({
+		questionId,
+		answerText,
+		newMapping
+	}: {
+		questionId: string;
+		answerText: string;
+		newMapping: string;
+	}): Promise<void> {
+		await this.surveyRepository.updateMapping({
+			questionId: new QuestionId(questionId),
+			answerText,
+			newMapping
 		});
 	}
 }

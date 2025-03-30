@@ -1,1 +1,2 @@
 CREATE TABLE IF NOT EXISTS Survey (questionId TEXT, surveyId TEXT, response TEXT, submissionTime TEXT, PRIMARY KEY (questionId, surveyId));
+CREATE TABLE IF NOT EXISTS SurveyMapping (questionId TEXT, response TEXT, mapping TEXT, UNIQUE (questionId, response));

@@ -58,9 +58,13 @@ export class D1SurveyRepository implements SurveyRepository {
 
 	async loadAll(): Promise<CouldBeAnError<Array<SurveyResponse>>> {
 		const response = await this.db
-			.prepare('SELECT questionId, surveyId, response FROM Survey')
+			.prepare(
+				'SELECT Survey.questionId, Survey.response, Survey.surveyId, SurveyMapping.mapping FROM Survey LEFT JOIN SurveyMapping ON Survey.questionId = SurveyMapping.questionId AND Survey.response = SurveyMapping.response'
+			)
 			.all();
 
+		const t = await this.db.prepare('select * from SurveyMapping').all();
+		console.log('SurveyMapping', t);
 		if (!response.success) {
 			return CouldBeAnError.withError(response.error || new Error(`Unkown error querying survey `));
 		}
@@ -68,10 +72,47 @@ export class D1SurveyRepository implements SurveyRepository {
 		const surveyResponses: Array<SurveyResponse> = response.results.map(
 			(rec: Record<string, unknown>): SurveyResponse => ({
 				questionId: new QuestionId(rec['questionId'] as string),
-				answer: rec['response'] as string
+				answer: rec['response'] as string,
+				mapping: rec['mapping'] as string | undefined
 			})
 		);
 
 		return CouldBeAnError.withValue(surveyResponses);
+	}
+	async updateMapping({
+		questionId,
+		answerText,
+		newMapping
+	}: {
+		questionId: QuestionId;
+		answerText: string;
+		newMapping: string;
+	}): Promise<CouldBeAnError<void>> {
+		try {
+			const response = await this.db
+				.prepare(
+					'INSERT INTO SurveyMapping(questionId, response, mapping) ' +
+						'VALUES(?, ?, ?) ' +
+						'ON CONFLICT(questionId, response) ' +
+						'DO ' +
+						'   UPDATE SET mapping = ? ' +
+						'   WHERE questionId = ? and response = ?;'
+				)
+				.bind(questionId.value, answerText, newMapping, newMapping, questionId.value, answerText)
+				.run();
+			if (!response.success) {
+				console.error('Error updating mapping', response.error);
+				return CouldBeAnError.withError(
+					response.error ||
+						new Error(
+							`Unknown error inserting ${JSON.stringify({ questionId, answerText, newMapping })}`
+						)
+				);
+			}
+		} catch (error) {
+			console.error('Error updating mapping', error);
+			return CouldBeAnError.withError(error as Error);
+		}
+		return CouldBeAnError.withNoValue();
 	}
 }

@@ -5,6 +5,9 @@
 	import AnswerMappingDisplay from './answer-mapping-display.svelte';
 
 	const { data } = $props();
+	const { question } = data;
+	const { topMapped } = question;
+	const topCategories = Object.entries(topMapped).sort((x, y) => y[1] - x[1]);
 </script>
 
 <div class="container">
@@ -33,14 +36,9 @@
 				<Heading level="2" size="4">Top categories</Heading>
 				<Margin marginTop="1">
 					<div class="categories">
-						<Category categoryName="Category 1" score={80} />
-						<Category categoryName="Category 2" score={65} />
-						<Category categoryName="Category 3" score={53} />
-						<Category categoryName="Category 4" score={45} />
-						<Category categoryName="Category 5" score={30} />
-						<Category categoryName="Long category name" score={20} />
-						<Category categoryName="Category 7" score={10} />
-						<Category categoryName="Category 8" score={8} />
+						{#each topCategories as [categoryName, score]}
+							<Category {categoryName} {score} />
+						{/each}
 					</div>
 				</Margin>
 			</section>

@@ -21,7 +21,7 @@ export const load: PageServerLoad = async (event) => {
 			x.questionId.equals(new QuestionId(questionId))
 		);
 	}
-	console.log({ questionId, questionIndex, url: event.url });
+
 	return {
 		question: await flattenQuestion(questionService, surveyResponses[questionIndex]),
 		nextQuestion: surveyResponses[questionIndex + 1]
@@ -33,19 +33,44 @@ export const load: PageServerLoad = async (event) => {
 	};
 };
 
-export const actions: Actions = {};
-
 async function flattenQuestion(
 	questionService: QuestionService,
 	surveyResponses: AggregatedSurveyQuestion
 ): Promise<
-	Omit<AggregatedSurveyQuestion, 'questionId'> & { questionId: string; questionText: string }
+	Omit<AggregatedSurveyQuestion, 'questionId'> & {
+		questionId: string;
+		questionText: string;
+		topMapped: { [mapping: string]: number };
+	}
 > {
 	const questionDetails = await questionService.question(surveyResponses.questionId);
-
+	const topMapped = surveyResponses.answers.reduce(
+		(mapping, answer) => {
+			const mappedText = answer.mapping || answer.answer;
+			if (mapping[mappedText]) {
+				mapping[mappedText] = mapping[mappedText] + answer.count;
+			} else {
+				mapping[mappedText] = answer.count;
+			}
+			return mapping;
+		},
+		{} as { [key: string]: number }
+	);
+	console.log('topMapped', surveyResponses.questionId, topMapped);
 	return {
 		...surveyResponses,
 		questionId: surveyResponses.questionId.value,
-		questionText: questionDetails.value.text
+		questionText: questionDetails.value.text,
+		topMapped
 	};
 }
+export const actions: Actions = {
+	default: async (event) => {
+		const data = await event.request.formData();
+		const { surveyService } = setup(event.platform);
+		const questionId = data.get('questionId') as string;
+		const newMapping = data.get('newMapping') as string;
+		const answerText = data.get('answerText') as string;
+		await surveyService.updateMapping({ questionId, answerText, newMapping });
+	}
+};
