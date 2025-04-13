@@ -15,6 +15,12 @@ pages_build_output_dir = ".svelte-kit/cloudflare"
 # - https://developers.cloudflare.com/pages/functions/bindings/#environment-variables
 # Note: Use secrets to store sensitive data.
 # - https://developers.cloudflare.com/pages/functions/bindings/#secrets
+
+[[d1_databases]]
+binding = "DB"
+database_name = "conference-feud-db"
+database_id = "9152b1f0-bf0e-432c-a0d2-ded4bf0002c7"
+
 [vars]
 AUTH0_CLIENT_ID = "uIqyYF9Ozvm4nSod7HseJk9ASbaHpBtU"
 AUTH0_DOMAIN = "conference-feud.au.auth0.com"
@@ -25,7 +31,12 @@ BASE_URL = "http://localhost:5173"
 AUTH0_CLIENT_ID = "uIqyYF9Ozvm4nSod7HseJk9ASbaHpBtU"
 AUTH0_DOMAIN = "conference-feud.au.auth0.com"
 AUTH0_JWKS_URL = "https://conference-feud.au.auth0.com/.well-known/jwks.json"
-BASE_URL = "https://conference-feud.pages.dev/"
+BASE_URL = "https://conference-feud.pages.dev"
+
+# [env.production.[d1_databases]]
+# binding = "DB"
+# database_name = "conference-feud-db"
+# database_id = "9152b1f0-bf0e-432c-a0d2-ded4bf0002c7"
 
 # Bind the Workers AI model catalog. Run machine learning models, powered by serverless GPUs, on Cloudflare’s global network
 # Docs: https://developers.cloudflare.com/pages/functions/bindings/#workers-ai
@@ -93,7 +104,3 @@ BASE_URL = "https://conference-feud.pages.dev/"
 # binding = "MY_KV_NAMESPACE"
 # id = "<PRODUCTION_NAMESPACE_ID>"
 
-[[d1_databases]]
-binding = "DB"
-database_name = "conference-feud-db"
-database_id = "9152b1f0-bf0e-432c-a0d2-ded4bf0002c7"
