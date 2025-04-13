@@ -25,7 +25,7 @@ BASE_URL = "http://localhost:5173"
 AUTH0_CLIENT_ID = "uIqyYF9Ozvm4nSod7HseJk9ASbaHpBtU"
 AUTH0_DOMAIN = "conference-feud.au.auth0.com"
 AUTH0_JWKS_URL = "https://conference-feud.au.auth0.com/.well-known/jwks.json"
-BASE_URL = "https://https://conference-feud.pages.dev/"
+BASE_URL = "https://conference-feud.pages.dev/"
 
 # Bind the Workers AI model catalog. Run machine learning models, powered by serverless GPUs, on Cloudflare’s global network
 # Docs: https://developers.cloudflare.com/pages/functions/bindings/#workers-ai

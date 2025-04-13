@@ -4,7 +4,8 @@ import type { AggregatedSurveyQuestion } from '$lib/services/survey/survey-servi
 import { QuestionId, type QuestionService } from '$lib/services';
 
 export const load: PageServerLoad = async (event) => {
-	const { surveyService, questionService } = setup(event.platform);
+	const { surveyService, questionService, validateSession } = setup(event.platform);
+	validateSession(event.cookies);
 	const questionId = event.url.searchParams.get('questionId');
 	const surveyResponses = await surveyService.allResponses();
 	// const flattenedResponses = await Promise.all(

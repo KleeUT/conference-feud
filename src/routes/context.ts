@@ -1,11 +1,14 @@
 import { D1SurveyRepository, QuestionService, SurveyService } from '$lib/services';
 import { D1QuestionRepository } from '$lib/services/question/d1-question-repository';
-import { D1SessionStore, SessionService } from '$lib/services/session';
-
+import { D1SessionStore, SessionService, type Session } from '$lib/services/session';
+import { mustBeLoggedIn } from '$lib/auth/auth-utils';
+import type { Cookies } from '@sveltejs/kit';
+import { constants } from './auth/constants';
 export function setup(platform: Readonly<App.Platform> | undefined): {
 	questionService: QuestionService;
 	surveyService: SurveyService;
 	sessionService: SessionService;
+	validateSession: (cookies: Cookies) => Promise<Session>;
 } {
 	const env = platform?.env;
 	if (!env) {
@@ -16,5 +19,8 @@ export function setup(platform: Readonly<App.Platform> | undefined): {
 	const surveyRepository = new D1SurveyRepository(env.DB);
 	const surveyService = new SurveyService(surveyRepository, questionService);
 	const sessionService = new SessionService(new D1SessionStore(env.DB));
-	return { questionService, surveyService, sessionService };
+	const validateSession = async (cookies: Cookies) => {
+		return await mustBeLoggedIn(sessionService, cookies.get(constants.sessionId));
+	};
+	return { questionService, surveyService, sessionService, validateSession };
 }
