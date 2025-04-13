@@ -1,13 +1,14 @@
 import { redirect } from '@sveltejs/kit';
-import { randomUUID } from 'crypto';
+
 import { constants } from '../constants';
 import { authConfig } from '../auth-config';
+import { newUUID } from '$lib/utils/uuid';
 
 export const GET = async ({ cookies, url, platform }) => {
 	if (!platform) {
 		throw new Error('No Platform');
 	}
-	const csrfState = randomUUID();
+	const csrfState = newUUID();
 	cookies.set(constants.csrfStateCookieName, csrfState, {
 		httpOnly: true,
 		sameSite: 'lax',

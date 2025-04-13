@@ -1,12 +1,10 @@
 import { redirect, type Cookies } from '@sveltejs/kit';
 import { constants } from '../../constants';
-import { JwksClient } from 'jwks-rsa';
-import type { JwtHeader, SigningKeyCallback } from 'jsonwebtoken';
-import jwt from 'jsonwebtoken';
+
 import { authConfig } from '../../auth-config';
-import type { User } from '../../user';
 import type { Env } from '../../../../app';
-let cachedKey: string | undefined = undefined;
+import { newUUID } from '$lib/utils/uuid';
+
 export const GET = async ({ cookies, url, platform }) => {
 	if (!platform) {
 		throw new Error('No Platform');
@@ -22,11 +20,8 @@ export const GET = async ({ cookies, url, platform }) => {
 
 	try {
 		const token = await getToken({ code, env: platform.env });
-
-		const authUser = (await verifyToken(token.id_token, platform.env)) as User;
-
-		setAuthCookie(cookies, authUser);
-		const sessionId = crypto.randomUUID();
+		console.log('Token', token);
+		const sessionId = newUUID();
 		setSessionCookie(cookies, sessionId);
 		cookies.delete('csrfState', { path: '/' });
 	} catch (err) {
@@ -39,16 +34,6 @@ export const GET = async ({ cookies, url, platform }) => {
 
 const setSessionCookie = (cookies: Cookies, sessionId: string) => {
 	cookies.set(constants.authCookieName, sessionId, {
-		httpOnly: true,
-		sameSite: 'lax',
-		maxAge: 3600,
-		path: '/'
-	});
-};
-// todo remove
-const setAuthCookie = (cookies: Cookies, user: User) => {
-	const cookieValue = jwt.sign(user, 'SESSION_SECRET');
-	cookies.set(constants.authCookieName, cookieValue, {
 		httpOnly: true,
 		sameSite: 'lax',
 		maxAge: 3600,
@@ -78,38 +63,4 @@ async function getToken({ code, env }: { code: string; env: Env }) {
 		expires_in: number;
 		token_type: 'Bearer';
 	}>();
-}
-
-async function verifyToken<T>(token: string, env: Env): Promise<T> {
-	return new Promise((resolve, reject) => {
-		jwt.verify(
-			token,
-			(header: JwtHeader, callback: SigningKeyCallback) => getKey(env, header, callback),
-			{},
-			(err, payload) => {
-				if (err) {
-					reject(err);
-				} else {
-					resolve(payload as T);
-				}
-			}
-		);
-	});
-}
-
-function getKey(env: Env, header: JwtHeader, callback: SigningKeyCallback) {
-	const client = new JwksClient({ jwksUri: authConfig(env).jwksUrl });
-
-	client.getSigningKey(header.kid, function (err, key) {
-		if (err) {
-			callback(err);
-		}
-		if (cachedKey) {
-			callback(null, cachedKey);
-		} else {
-			const signingKey = key?.getPublicKey();
-			cachedKey = signingKey;
-			callback(null, signingKey);
-		}
-	});
 }
