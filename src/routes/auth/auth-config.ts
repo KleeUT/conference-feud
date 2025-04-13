@@ -1,6 +1,12 @@
 import type { Env } from '../../app';
-
-export const authConfig = (env: Env) => ({
+export type AuthConfig = {
+	jwksUrl: string;
+	auth0ClientSecret: string;
+	auth0ClientId: string;
+	publicBaseUrl: string;
+	auth0Domain: string;
+};
+export const authConfig = (env: Env): AuthConfig => ({
 	jwksUrl: env.AUTH0_JWKS_URL,
 	auth0ClientSecret: env.AUTH0_SECRET,
 	auth0ClientId: env.AUTH0_CLIENT_ID,

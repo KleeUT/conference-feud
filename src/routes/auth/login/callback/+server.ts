@@ -4,11 +4,28 @@ import { constants } from '../../constants';
 import { authConfig } from '../../auth-config';
 import type { Env } from '../../../../app';
 import { newUUID } from '$lib/utils/uuid';
+import { setup } from '../../../context';
+import { decode } from '@tsndr/cloudflare-worker-jwt';
+export type IdToken = {
+	nickname: string;
+	name: string;
+	picture: string;
+	updated_at: string;
+	email: string;
+	email_verified: false;
+	iss: string;
+	aud: string;
+	sub: string;
+	iat: number;
+	exp: number;
+	sid: string;
+};
 
 export const GET = async ({ cookies, url, platform }) => {
 	if (!platform) {
 		throw new Error('No Platform');
 	}
+	const { sessionService } = setup(platform);
 	const csrfState = cookies.get(constants.csrfStateCookieName);
 	const returnUrl = cookies.get(constants.returnToCookieName);
 
@@ -20,9 +37,14 @@ export const GET = async ({ cookies, url, platform }) => {
 
 	try {
 		const token = await getToken({ code, env: platform.env });
-		console.log('Token', token);
 		const sessionId = newUUID();
+		const decoded = decode(token.id_token) as IdToken;
 		setSessionCookie(cookies, sessionId);
+		sessionService.storeSession({
+			name: decoded.name,
+			userId: decoded.sub,
+			sessionId
+		});
 		cookies.delete('csrfState', { path: '/' });
 	} catch (err) {
 		console.error('Error getting token', err);
@@ -33,7 +55,7 @@ export const GET = async ({ cookies, url, platform }) => {
 };
 
 const setSessionCookie = (cookies: Cookies, sessionId: string) => {
-	cookies.set(constants.authCookieName, sessionId, {
+	cookies.set(constants.sessionId, sessionId, {
 		httpOnly: true,
 		sameSite: 'lax',
 		maxAge: 3600,
