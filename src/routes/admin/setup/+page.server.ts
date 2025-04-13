@@ -6,6 +6,7 @@ import { setup } from '../../context';
 export const load: PageServerLoad = async (event) => {
 	const { questionService } = setup(event.platform);
 	const questions = await questionService.allQuestions();
+	console.log('keys', Object.keys(event.platform?.env || {}));
 	return {
 		questions: questions.map((x) => ({
 			...x,

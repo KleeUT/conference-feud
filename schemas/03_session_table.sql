@@ -1,0 +1,1 @@
+CREATE TABLE IF NOT EXISTS Session (session_id TEXT, user_id TEXT, expires_at INTEGER, name TEXT)

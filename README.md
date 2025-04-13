@@ -40,6 +40,7 @@ Run scripts for all tables in local
 ```
 npx wrangler d1 execute conference-feud-db --local --file=./schemas/01_question_table.sql
 npx wrangler d1 execute conference-feud-db --local --file=./schemas/02_survey_table.sql
+npx wrangler d1 execute conference-feud-db --local --file=./schemas/03_session_table.sql
 ```
 
 ## Building
