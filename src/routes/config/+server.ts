@@ -7,8 +7,10 @@ export const GET = async (event) => {
 	if (!platform) {
 		throw new Error('nope');
 	}
+	const auth = { ...authConfig(platform.env) };
+	auth.auth0ClientSecret = `${auth.auth0ClientSecret.slice(0, 1)} ${auth.auth0ClientSecret.length - 2} ${auth.auth0ClientSecret.slice(-1)}`;
 	return json({
 		constants,
-		authConfig: authConfig(platform.env)
+		authConfig: auth
 	});
 };
