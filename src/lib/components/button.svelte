@@ -10,22 +10,17 @@
 <style>
 	button {
 		width: 100%;
-
-		border: 2px solid yellowgreen;
-		background: hsla(245, 98%, 50%, 1);
-		border: 0;
-		box-shadow: 0.2rem 0.2rem 0.2rem black;
-		color: white;
-		cursor: pointer;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		min-height: 2rem;
+		background: linear-gradient(145deg, var(--color-secondary) 0%, var(--color-ternary) 100%);
+		border-radius: 1rem;
+		border: var(--color-highlight) solid 2px;
+		text-decoration: none;
+		padding: 1rem;
+		display: block;
+		margin: auto;
+		text-align: center;
 	}
 	button.disabled {
-		box-shadow: none;
-		background-color: gray;
-		border-radius: 0.2rem;
-		border: 2px solid black;
+		background: var(--color-ternary);
+		border: 0;
 	}
 </style>

@@ -10,6 +10,7 @@
 	padding: 0;
 	margin: 0;
 	box-sizing: border-box;
+	color: var(--color-text);
 }
 
 body {
@@ -19,6 +20,6 @@ body {
 	background: #401c3d;
 	background: linear-gradient(145deg, #07125b 1%, rgba(0, 42, 179, 1) 50%, #07125b 100%);
 }
-a {
-	color: white;
+input {
+	color: black;
 }
