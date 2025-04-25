@@ -29,3 +29,7 @@ body {
 input {
 	color: black;
 }
+
+p {
+	text-align: left;
+}

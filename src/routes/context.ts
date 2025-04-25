@@ -14,6 +14,7 @@ export function setup(platform: Readonly<App.Platform> | undefined): {
 	if (!env) {
 		throw new Error('nope');
 	}
+	console.log('env', Object.keys(env));
 	const questionRepository = new D1QuestionRepository(env.DB);
 	const questionService = new QuestionService(questionRepository);
 	const surveyRepository = new D1SurveyRepository(env.DB);
