@@ -9,7 +9,7 @@ export class D1SessionStore {
 
 	async getSession(sessionId: string): Promise<Session | null> {
 		const result = await this.db
-			.prepare('SELECT * FROM Session WHERE session_id = ?')
+			.prepare('SELECT * FROM SessionStore WHERE session_id = ?')
 			.bind(sessionId)
 			.first();
 
@@ -27,7 +27,9 @@ export class D1SessionStore {
 
 	async storeSession(session: Session): Promise<void> {
 		await this.db
-			.prepare('INSERT INTO Session (session_id, user_id, expires_at, name) VALUES (?, ?, ?, ?)')
+			.prepare(
+				'INSERT INTO SessionStore (session_id, user_id, expires_at, name) VALUES (?, ?, ?, ?)'
+			)
 			.bind(session.sessionId, session.userId, session.expiresAt.valueOf(), session.name)
 			.run();
 	}
