@@ -6,6 +6,10 @@ import type { Env } from '../../../../app';
 import { newUUID } from '$lib/utils/uuid';
 import { setup } from '../../../context';
 import { decode } from '@tsndr/cloudflare-worker-jwt';
+export type DecodedToken = {
+	header: { alg: 'RS256'; typ: 'JWT'; kid: string };
+	payload: IdToken;
+};
 export type IdToken = {
 	nickname: string;
 	name: string;
@@ -38,11 +42,13 @@ export const GET = async ({ cookies, url, platform }) => {
 	try {
 		const token = await getToken({ code, env: platform.env });
 		const sessionId = newUUID();
-		const decoded = decode(token.id_token) as IdToken;
+		const decoded = decode(token.id_token) as DecodedToken;
 		setSessionCookie(cookies, sessionId);
-		sessionService.storeSession({
-			name: decoded.name,
-			userId: decoded.sub,
+		console.log('token', token);
+		console.log('Decoded token', decoded);
+		await sessionService.storeSession({
+			name: decoded.payload.name,
+			userId: decoded.payload.sub,
 			sessionId
 		});
 		cookies.delete('csrfState', { path: '/' });
