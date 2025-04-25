@@ -5,9 +5,8 @@ import { setup } from '../../context';
 
 export const load: PageServerLoad = async (event) => {
 	const { questionService, validateSession } = setup(event.platform);
-	validateSession(event.cookies);
+	await validateSession(event.cookies);
 	const questions = await questionService.allQuestions();
-	console.log('keys', Object.keys(event.platform?.env || {}));
 	return {
 		questions: questions.map((x) => ({
 			...x,
@@ -19,7 +18,7 @@ export const load: PageServerLoad = async (event) => {
 export const actions = {
 	addQuestion: async (event) => {
 		const { questionService, validateSession } = setup(event.platform);
-		validateSession(event.cookies);
+		await validateSession(event.cookies);
 		const data = await event.request.formData();
 		const questionText = data.get('questionText')?.valueOf() as string | undefined;
 		if (!questionText) {
@@ -30,7 +29,7 @@ export const actions = {
 
 	deleteQuestion: async (event) => {
 		const { questionService, validateSession } = setup(event.platform);
-		validateSession(event.cookies);
+		await validateSession(event.cookies);
 
 		const data = await event.request.formData();
 		const questionId = data.get('questionId')?.valueOf() as string | undefined;

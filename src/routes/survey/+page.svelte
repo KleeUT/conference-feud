@@ -1,6 +1,7 @@
 <script lang="ts">
 	import Button from '$lib/components/button.svelte';
 	import Heading from '$lib/components/heading.svelte';
+	import Main from '$lib/components/main.svelte';
 	import Margin from '$lib/components/margin.svelte';
 	import TextInput from '$lib/components/text-input.svelte';
 
@@ -11,7 +12,7 @@
 </script>
 
 <div class="container">
-	<main>
+	<Main>
 		<Heading level="1" size="5">Conference Feud Survey</Heading>
 		{#if question}
 			<Heading level="2" size="2">{question?.questionText}</Heading>
@@ -29,7 +30,7 @@
 		{:else}
 			<p>Thanks for contributing.</p>
 		{/if}
-	</main>
+	</Main>
 </div>
 
 <style>
@@ -39,15 +40,5 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-	}
-	main {
-		width: 90vw;
-		height: 90vh;
-		background: darkblue;
-		padding: 1rem;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		flex-direction: column;
 	}
 </style>

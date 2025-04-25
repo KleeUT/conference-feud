@@ -22,6 +22,7 @@
 		justify-content: center;
 		align-content: center;
 		width: 100%;
+		margin: auto;
 	}
 
 	div.popover {
@@ -30,6 +31,7 @@
 		border: none;
 		padding: 0;
 		width: 79%;
+		margin: auto;
 	}
 
 	::backdrop {

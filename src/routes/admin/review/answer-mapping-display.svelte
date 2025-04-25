@@ -12,10 +12,6 @@
 		questionId: string;
 	}
 	const { answers, questionId }: Props = $props();
-	// const answersWithMapping: Array<Props['answers'][0] & { newMapping?: string }> = answers.map(
-	// 	(x) => ({ ...x, newMapping: x.mapping })
-	// );
-	// console.log(answersWithMapping);
 </script>
 
 <table>

@@ -5,6 +5,7 @@
 	import Button from '$lib/components/button.svelte';
 	import Heading from '$lib/components/heading.svelte';
 	import QuestionListItem from './question-list-item.svelte';
+	import Margin from '$lib/components/margin.svelte';
 	const { data }: { data: PageData } = $props();
 	const questions = data.questions;
 </script>
@@ -15,15 +16,19 @@
 
 <main>
 	<Heading level="1">Setup game</Heading>
-	<Button popovertarget="questionedit">New Question</Button>
-	{#each questions as question}
-		<QuestionListItem text={question.text} id={question.id.value} />
-	{/each}
+	<Margin marginTop="1">
+		<Button popovertarget="questionedit">New Question</Button>
+		{#each questions as question}
+			<Margin marginTop="1">
+				<QuestionListItem text={question.text} id={question.id.value} />
+			</Margin>
+		{/each}
+	</Margin>
 </main>
 
 <style>
 	main {
-		background-color: darkblue;
+		background-color: var(--color-main);
 		width: 80%;
 		padding: 1rem;
 		margin: auto;

@@ -44,8 +44,6 @@ export const GET = async ({ cookies, url, platform }) => {
 		const sessionId = newUUID();
 		const decoded = decode(token.id_token) as DecodedToken;
 		setSessionCookie(cookies, sessionId);
-		console.log('token', token);
-		console.log('Decoded token', decoded);
 		await sessionService.storeSession({
 			name: decoded.payload.name,
 			userId: decoded.payload.sub,
@@ -56,7 +54,6 @@ export const GET = async ({ cookies, url, platform }) => {
 		console.error('Error getting token', err);
 		return new Response(`Failed to get token. Err: ${err}`, { status: 500 });
 	}
-	console.log('Done');
 	redirect(307, returnUrl || '/admin');
 };
 
