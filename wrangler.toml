@@ -16,11 +16,6 @@ pages_build_output_dir = ".svelte-kit/cloudflare"
 # Note: Use secrets to store sensitive data.
 # - https://developers.cloudflare.com/pages/functions/bindings/#secrets
 
-[[d1_databases]]
-binding = "DB"
-database_name = "conference-feud-db"
-database_id = "9152b1f0-bf0e-432c-a0d2-ded4bf0002c7"
-
 [vars]
 AUTH0_CLIENT_ID = "uIqyYF9Ozvm4nSod7HseJk9ASbaHpBtU"
 AUTH0_DOMAIN = "conference-feud.au.auth0.com"
@@ -32,6 +27,11 @@ AUTH0_CLIENT_ID = "uIqyYF9Ozvm4nSod7HseJk9ASbaHpBtU"
 AUTH0_DOMAIN = "conference-feud.au.auth0.com"
 AUTH0_JWKS_URL = "https://conference-feud.au.auth0.com/.well-known/jwks.json"
 BASE_URL = "https://conference-feud.pages.dev"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "conference-feud-db"
+database_id = "9152b1f0-bf0e-432c-a0d2-ded4bf0002c7"
 
 # [env.production.[d1_databases]]
 # binding = "DB"
