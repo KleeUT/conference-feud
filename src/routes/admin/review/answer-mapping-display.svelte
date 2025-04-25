@@ -1,8 +1,7 @@
 <script lang="ts">
 	import Button from '$lib/components/button.svelte';
 	import TextInput from '$lib/components/text-input.svelte';
-	import type { ChangeEventHandler } from 'svelte/elements';
-	import Answer from '../../answer.svelte';
+
 	interface Props {
 		answers: Array<{
 			answer: string;
