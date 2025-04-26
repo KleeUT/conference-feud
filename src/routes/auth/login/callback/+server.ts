@@ -61,13 +61,12 @@ const setSessionCookie = (cookies: Cookies, sessionId: string) => {
 	cookies.set(constants.sessionId, sessionId, {
 		httpOnly: true,
 		sameSite: 'lax',
-		maxAge: 3600,
+		maxAge: 86400,
 		path: '/'
 	});
 };
 
 async function getToken({ code, env }: { code: string; env: Env }) {
-	console.log('Fetch path', `https://${authConfig(env).auth0Domain}/oauth/token`);
 	const resp = await fetch(`https://${authConfig(env).auth0Domain}/oauth/token`, {
 		method: 'POST',
 		body: JSON.stringify({
