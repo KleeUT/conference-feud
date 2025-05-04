@@ -57,7 +57,7 @@ async function flattenQuestion(
 		},
 		{} as { [key: string]: number }
 	);
-	console.log('topMapped', surveyResponses.questionId, topMapped);
+
 	return {
 		...surveyResponses,
 		questionId: surveyResponses.questionId.value,

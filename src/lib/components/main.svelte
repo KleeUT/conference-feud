@@ -1,8 +1,12 @@
-<script>
-	const { children } = $props();
+<script lang="ts">
+	interface Props {
+		children: () => any;
+		align?: 'left' | 'center' | 'right';
+	}
+	const { children, align }: Props = $props();
 </script>
 
-<main>
+<main class={align}>
 	{@render children?.()}
 </main>
 
@@ -16,5 +20,14 @@
 		align-items: center;
 		justify-content: center;
 		flex-direction: column;
+	}
+	main.left {
+		align-items: flex-start;
+	}
+	main.center {
+		align-items: center;
+	}
+	main.right {
+		align-items: flex-end;
 	}
 </style>
