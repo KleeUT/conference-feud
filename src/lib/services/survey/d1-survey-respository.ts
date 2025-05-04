@@ -63,8 +63,6 @@ export class D1SurveyRepository implements SurveyRepository {
 			)
 			.all();
 
-		const t = await this.db.prepare('select * from SurveyMapping').all();
-		console.log('SurveyMapping', t);
 		if (!response.success) {
 			return CouldBeAnError.withError(response.error || new Error(`Unkown error querying survey `));
 		}

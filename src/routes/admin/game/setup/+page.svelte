@@ -1,4 +1,5 @@
 <script lang="ts">
+	import ButtonLink from '$lib/components/button-link.svelte';
 	import Button from '$lib/components/button.svelte';
 	import Heading from '$lib/components/heading.svelte';
 	import Main from '$lib/components/main.svelte';
@@ -14,11 +15,11 @@
 		<form method="post" action="?setTeamName">
 			<label>
 				Team 1:
-				<TextInput type="text" name="team1" value={data.teams.team1.name} />
+				<TextInput type="text" name="team1Name" value={data.gameState.team1Name} />
 			</label>
 			<label>
 				Team 2:
-				<TextInput type="text" name="team1" value={data.teams.team2.name} />
+				<TextInput type="text" name="team2Name" value={data.gameState.team2Name} />
 			</label>
 			<span>
 				<Button type="submit">Update team names</Button>
@@ -27,17 +28,17 @@
 	</section>
 	<hr />
 	<section>
-		<Heading level="2" size="3">Questions</Heading>
+		<Heading level="2" size="3">Rounds</Heading>
 		<ol>
-			{#each data.questions as question}
+			{#each data.gameState.rounds as round}
 				<li>
-					<a href="/admin/game/setup/question/{question.questionId}">
-						<p>{question.question}</p>
+					<a href="/admin/game/setup/round/{round.id}">
+						<p>{round.question}</p>
 					</a>
 				</li>
 			{/each}
 		</ol>
-		<a href="/admin/game/setup/question"> New Question</a>
+		<ButtonLink href="/admin/game/setup/round">New Round</ButtonLink>
 	</section>
 </Main>
 
@@ -50,5 +51,12 @@
 	hr {
 		width: 100%;
 		margin: 2rem 0;
+	}
+	section {
+		width: 100%;
+		overflow: auto;
+	}
+	ol {
+		margin-bottom: 1rem;
 	}
 </style>

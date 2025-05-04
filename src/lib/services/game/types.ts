@@ -13,19 +13,22 @@ export interface RoundQuestion {
 	answers: Array<StoredAnswer>;
 }
 
+export type OptionalTeamName = 'team1' | 'team2' | null;
+
 export interface StoredRound extends RoundQuestion {
 	id: string;
 	isCurrent: boolean;
 	isComplete: boolean;
 	playOrder: number;
-	playingTeam: 'team1' | 'team2' | null;
-	winningTeam: 'team1' | 'team2' | null;
+	playingTeam: OptionalTeamName;
+	winningTeam: OptionalTeamName;
 	wrongGuesses: number;
 }
-// export interface StoredGameState {
-// 	team1Name: string;
-// 	team2Name: string;
-// 	hasStarted: boolean;
-// 	currentRound: number;
-// 	rounds: Array<StoredRound>;
-// }
+
+export interface StoredGameState {
+	team1Name: string;
+	team2Name: string;
+	hasStarted: boolean;
+	currentRound: number;
+	rounds: Array<StoredRound>;
+}

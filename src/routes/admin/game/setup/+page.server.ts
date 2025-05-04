@@ -1,28 +1,22 @@
-import type { PageServerLoad } from './$types';
+import { setup } from '../../../context';
+import type { Actions, PageServerLoad } from './$types';
 
-export const load: PageServerLoad = async () => {
+export const load: PageServerLoad = async (event) => {
+	const { gameService } = setup(event.platform);
+	const gameState = await gameService.getGameState();
 	return {
-		teams: {
-			team1: {
-				name: 'Team 1'
-			},
-			team2: {
-				name: 'Team 2'
-			}
-		},
-		questions: [
-			{
-				questionId: 'question1_id',
-				question: 'is a hotdog a sandwich?'
-			},
-			{
-				questionId: 'question2_id',
-				question: 'is a taco a sandwich?'
-			},
-			{
-				questionId: 'question3_id',
-				question: 'is a burger a sandwich?'
-			}
-		]
+		gameState
 	};
+};
+export const actions: Actions = {
+	default: async (event) => {
+		const { gameService } = setup(event.platform);
+		const formData = await event.request.formData();
+		const team1Name = formData.get('team1Name')?.toString() ?? '';
+		const team2Name = formData.get('team2Name')?.toString() ?? '';
+		const gameState = await gameService.setTeamNames(team1Name, team2Name);
+		return {
+			gameState
+		};
+	}
 };

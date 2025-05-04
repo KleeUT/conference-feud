@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS Round (
 );
 
 CREATE TABLE IF NOT EXISTS Answer(
-  id: TEXT PRIMARY KEY,
+  id TEXT PRIMARY KEY,
   roundId TEXT,
   answer TEXT ,
   value NUMBER ,
