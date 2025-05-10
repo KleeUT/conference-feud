@@ -144,4 +144,42 @@ export class D1GameStateRepository {
 			rounds
 		};
 	}
+
+	async getCurrentRound(): Promise<StoredRound> {
+		const gameState = await this.getGameState();
+		const currentRound = gameState.rounds.find(
+			(round) => round.playOrder === gameState.currentRound
+		);
+		if (!currentRound) {
+			throw new Error('Current round not found');
+		}
+		return currentRound;
+	}
+
+	async setWrongGuesses(id: string, arg1: number) {
+		await this.db.prepare('UPDATE Round SET wrongGuesses = ? WHERE id = ?').bind(arg1, id).run();
+	}
+
+	async setAnswerVisible(answerId: string): Promise<void> {
+		await this.db.prepare('UPDATE Answer SET isVisible = 1 WHERE id = ?').bind(answerId).run();
+	}
+
+	async setPlayingTeam(roundId: string, team: string | null) {
+		await this.db
+			.prepare('UPDATE Round SET playingTeam = ? WHERE id = ?')
+			.bind(team, roundId)
+			.run();
+	}
+	setRound(playOrder: number) {
+		this.db
+			.prepare('UPDATE Game SET currentRound = ? WHERE currentRound = 0')
+			.bind(playOrder)
+			.run();
+	}
+	endRound(id: string, winningTeam: OptionalTeamName) {
+		this.db
+			.prepare('UPDATE Round SET isComplete = 1, winningTeam =? WHERE id = ?')
+			.bind(winningTeam ?? '', id)
+			.run();
+	}
 }
