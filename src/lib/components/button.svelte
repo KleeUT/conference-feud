@@ -1,9 +1,12 @@
 <script lang="ts">
 	import type { HTMLButtonAttributes } from 'svelte/elements';
-	let { children, disabled, ...props }: HTMLButtonAttributes = $props();
+	interface Props {
+		buttonType?: 'primary' | 'secondary';
+	}
+	let { children, disabled, buttonType, ...props }: Props & HTMLButtonAttributes = $props();
 </script>
 
-<button class={disabled ? 'disabled' : ''} {...props}>
+<button class="{disabled ? 'disabled' : ''} {buttonType ?? ''}" {...props}>
 	{@render children?.()}
 </button>
 
@@ -18,9 +21,14 @@
 		display: block;
 		margin: auto;
 		text-align: center;
+		cursor: pointer;
 	}
 	button.disabled {
 		background: var(--color-ternary);
 		border: 0;
+		cursor: not-allowed;
+	}
+	.secondary {
+		background: var(--color-ternary);
 	}
 </style>

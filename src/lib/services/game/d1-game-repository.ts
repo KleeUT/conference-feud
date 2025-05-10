@@ -144,4 +144,22 @@ export class D1GameStateRepository {
 			rounds
 		};
 	}
+
+	async getCurrentRound(): Promise<StoredRound> {
+		const gameState = await this.db.prepare('SELECT * FROM Game').first<StoredGameState>();
+		if (!gameState) {
+			throw new Error('Game state not found');
+		}
+		const round = await this.db
+			.prepare('SELECT * FROM Round WHERE playOrder = ?')
+			.bind(gameState.currentRound)
+			.first<StoredRound>();
+		if (!round) {
+			throw new Error('Round not found');
+		}
+		return round;
+	}
+	async setWrongGuesses(id: string, arg1: number) {
+		await this.db.prepare('UPDATE Round SET wrongGuesses = ? WHERE id = ?').bind(arg1, id).run();
+	}
 }

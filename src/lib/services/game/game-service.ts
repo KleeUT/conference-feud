@@ -73,4 +73,11 @@ export class GameService {
 		const gameState = await this.gameStateRepository.getGameState();
 		return gameState;
 	}
+
+	async addWrongGuess(): Promise<void> {
+		const currentRound = await this.gameStateRepository.getCurrentRound();
+		if (currentRound.wrongGuesses < 3) {
+			this.gameStateRepository.setWrongGuesses(currentRound.id, currentRound.wrongGuesses + 1);
+		}
+	}
 }
