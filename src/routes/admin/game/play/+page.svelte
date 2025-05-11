@@ -52,7 +52,7 @@
 				</form>
 			</div>
 		{/if}
-		<!-- Looking to do multiple sumbit buttons so expose the answer, maybe using javascript or possibly using query params -->
+
 		<div class="currenRoundAnswers">
 			{#each data.currentRoundAnswers as answer}
 				<div class="answer-display">

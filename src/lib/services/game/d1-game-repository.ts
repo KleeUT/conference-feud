@@ -28,7 +28,6 @@ export class D1GameStateRepository {
 				acc.set(id, {
 					id,
 					question: roundData.question as string,
-					isCurrent: roundData.isCurrent as boolean,
 					isComplete: roundData.isComplete as boolean,
 					playOrder: roundData.playOrder as number,
 					playingTeam: roundData.playingTeam as OptionalTeamName,
@@ -70,12 +69,11 @@ export class D1GameStateRepository {
 		});
 		const roundPromise = this.db
 			.prepare(
-				'INSERT INTO Round (id, question, isCurrent, isComplete, playOrder, playingTeam, winningTeam, wrongGuesses) VALUES (?, ?, ?, ?, ?, ?, ?, ?)'
+				'INSERT INTO Round (id, question, isComplete, playOrder, playingTeam, winningTeam, wrongGuesses) VALUES (?, ?, ?, ?, ?, ?, ?)'
 			)
 			.bind(
 				round.id,
 				round.question,
-				round.isCurrent,
 				round.isComplete,
 				round.playOrder,
 				round.playingTeam,
@@ -96,11 +94,10 @@ export class D1GameStateRepository {
 		});
 		const roundPromise = this.db
 			.prepare(
-				'UPDATE Round SET question = ?, isCurrent = ?, isComplete = ?, playOrder = ?, playingTeam = ?, winningTeam = ?, wrongGuesses = ? WHERE id = ?'
+				'UPDATE Round SET question = ?, isComplete = ?, playOrder = ?, playingTeam = ?, winningTeam = ?, wrongGuesses = ? WHERE id = ?'
 			)
 			.bind(
 				round.question,
-				round.isCurrent,
 				round.isComplete,
 				round.playOrder,
 				round.playingTeam,

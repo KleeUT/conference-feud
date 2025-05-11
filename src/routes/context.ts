@@ -6,12 +6,14 @@ import type { Cookies } from '@sveltejs/kit';
 import { constants } from './auth/constants';
 import { GameService } from '$lib/services/game/game-service';
 import { D1GameStateRepository } from '$lib/services/game/d1-game-repository';
+import { ServerSentEventSender } from '$lib/services/eventSender';
 export function setup(platform: Readonly<App.Platform> | undefined): {
 	questionService: QuestionService;
 	surveyService: SurveyService;
 	sessionService: SessionService;
 	gameService: GameService;
 	validateSession: (cookies: Cookies) => Promise<Session>;
+	sseSender: ServerSentEventSender;
 } {
 	const env = platform?.env;
 	if (!env) {
@@ -23,9 +25,17 @@ export function setup(platform: Readonly<App.Platform> | undefined): {
 	const surveyRepository = new D1SurveyRepository(env.DB);
 	const surveyService = new SurveyService(surveyRepository, questionService);
 	const sessionService = new SessionService(new D1SessionStore(env.DB));
+	const sseSender = ServerSentEventSender.create();
 	const validateSession = async (cookies: Cookies) => {
 		return await mustBeLoggedIn(sessionService, cookies.get(constants.sessionId));
 	};
-	const gameService = new GameService(new D1GameStateRepository(env.DB));
-	return { questionService, surveyService, sessionService, validateSession, gameService };
+	const gameService = new GameService(new D1GameStateRepository(env.DB), sseSender);
+	return {
+		questionService,
+		surveyService,
+		sessionService,
+		validateSession,
+		gameService,
+		sseSender
+	};
 }
