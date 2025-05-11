@@ -9,6 +9,7 @@
 
 	const { data } = $props();
 	const { question, hasNextQuestion } = data;
+	let text = $state('fs');
 </script>
 
 <div class="container">
@@ -19,12 +20,15 @@
 			<form method="post">
 				<TextInput hidden name="questionId" value={question.questionId}></TextInput>
 				<Margin marginTop="1">
-					<TextInput maxLength={50} name="answer" required></TextInput>
+					<TextInput maxLength={50} name="answer" bind:value={text} required></TextInput>
 				</Margin>
 				<Margin marginTop="1">
-					<Button>
-						{#if hasNextQuestion}Next{:else}Done{/if}
-					</Button>
+					{#if text.length > 0 && text.length <= 50}
+						<input type="hidden" name="text" value={text} />
+						<Button>
+							{#if hasNextQuestion}Next{:else}Done{/if}
+						</Button>
+					{/if}
 				</Margin>
 			</form>
 		{:else}
