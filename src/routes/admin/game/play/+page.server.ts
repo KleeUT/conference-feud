@@ -1,9 +1,13 @@
-import { error } from '@sveltejs/kit';
+import { error, redirect } from '@sveltejs/kit';
 import { setup } from '../../../context';
 import type { Actions, PageServerLoad } from './$types';
 
-export const load: PageServerLoad = async ({ platform }) => {
-	const { gameService } = setup(platform);
+export const load: PageServerLoad = async ({ platform, cookies }) => {
+	const { gameService, validateSession } = setup(platform);
+	if (!platform) {
+		redirect(403, 'No platform');
+	}
+	await validateSession(cookies);
 	const game = await gameService.getGameState();
 	if (!game) {
 		return error(404, 'Game not found');
@@ -15,7 +19,7 @@ export const load: PageServerLoad = async ({ platform }) => {
 	let currentRoundAnswers = currentRound?.answers ?? [];
 	const wrongGuesses = Array(currentRound?.wrongGuesses);
 	currentRoundAnswers = currentRoundAnswers
-		.filter((x) => x.answer)
+		.filter((x) => x.value)
 		.sort((x, y) => y.value - x.value);
 	const hasGuessesRemaining = currentRound?.wrongGuesses < 4;
 	const canEndRound = currentRoundAnswers.every((x) => x.isVisible) || !hasGuessesRemaining;
@@ -58,33 +62,41 @@ export const load: PageServerLoad = async ({ platform }) => {
 
 export const actions: Actions = {
 	answer: async (event) => {
-		const { gameService } = setup(event.platform);
+		const { gameService, validateSession, sseSender } = setup(event.platform);
+		await validateSession(event.cookies);
 		const formData = await event.request.formData();
 		const answerId = formData.get('answerId') as string;
 		await gameService.setAnswerVisible(answerId);
+		sseSender.send({ msg: 'answer', answerId });
 	},
 	wrongGuess: async (event) => {
-		const { gameService } = setup(event.platform);
+		const { gameService, validateSession } = setup(event.platform);
+		await validateSession(event.cookies);
 		await gameService.addWrongGuess();
 	},
 	setTeam1: async (event) => {
-		const { gameService } = setup(event.platform);
+		const { gameService, validateSession } = setup(event.platform);
+		await validateSession(event.cookies);
 		await gameService.setPlayingTeam('team1');
 	},
 	setTeam2: async (event) => {
-		const { gameService } = setup(event.platform);
+		const { gameService, validateSession } = setup(event.platform);
+		await validateSession(event.cookies);
 		await gameService.setPlayingTeam('team2');
 	},
 	switchTeam: async (event) => {
-		const { gameService } = setup(event.platform);
+		const { gameService, validateSession } = setup(event.platform);
+		await validateSession(event.cookies);
 		await gameService.switchTeam();
 	},
 	endRound: async (event) => {
-		const { gameService } = setup(event.platform);
+		const { gameService, validateSession } = setup(event.platform);
+		await validateSession(event.cookies);
 		await gameService.endRound();
 	},
 	nextRound: async (event) => {
-		const { gameService } = setup(event.platform);
+		const { gameService, validateSession } = setup(event.platform);
+		await validateSession(event.cookies);
 		await gameService.nextRound();
 	}
 };

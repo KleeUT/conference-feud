@@ -4,7 +4,6 @@ DROP TABLE IF EXISTS Game;
 CREATE TABLE IF NOT EXISTS Round (
   id TEXT PRIMARY KEY,
   question TEXT NOT NULL,
-  isCurrent INTEGER NOT NULL,
   isComplete INTEGER NOT NULL,
   playOrder INTEGER NOT NULL,
   playingTeam TEXT,

@@ -5,6 +5,7 @@
 	--color-secondary: #fe7c09;
 	--color-ternary: #ca5b00;
 	--color-text: white;
+	--color-secondary-text: #d1d1d1;
 }
 * {
 	font-size: 18pt;

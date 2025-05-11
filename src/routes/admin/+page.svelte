@@ -8,8 +8,9 @@
 {JSON.stringify(data)}
 {#if data.sessionValid}
 	<ul>
-		<li><a href="/admin/setup">setup</a></li>
-		<li><a href="/admin/review">review</a></li>
-		<li><a href="/admin/game">game</a></li>
+		<li><a href="/admin/setup">setup survey</a></li>
+		<li><a href="/admin/review">review survey </a></li>
+		<li><a href="/admin/game/setup">setup game</a></li>
+		<li><a href="/admin/game/play">run game</a></li>
 	</ul>
 {/if}

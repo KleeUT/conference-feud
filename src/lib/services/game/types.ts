@@ -8,16 +8,12 @@ export interface StoredAnswer extends NewAnswer {
 	isVisible: boolean;
 }
 
-export interface RoundQuestion {
-	question: string;
-	answers: Array<StoredAnswer>;
-}
-
 export type OptionalTeamName = 'team1' | 'team2' | null;
 
-export interface StoredRound extends RoundQuestion {
+export interface StoredRound {
+	question: string;
+	answers: Array<StoredAnswer>;
 	id: string;
-	isCurrent: boolean;
 	isComplete: boolean;
 	playOrder: number;
 	playingTeam: OptionalTeamName;
