@@ -6,7 +6,12 @@
 		round: StoredRound;
 	}
 	let { round }: Props = $props();
-	const answers = $derived(round.answers.filter((x) => x.value).sort((a, b) => b.value - a.value));
+	const answers = $derived(
+		round.answers
+			.filter((x) => x.value)
+			.sort((a, b) => b.value - a.value)
+			.map((x) => (round.isComplete ? { ...x, isVisible: true } : x))
+	);
 	const wrongGuesses = $derived(new Array(round.wrongGuesses));
 </script>
 
