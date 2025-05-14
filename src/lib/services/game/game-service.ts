@@ -96,6 +96,7 @@ export class GameService {
 	}
 	async setAnswerVisible(answerId: string): Promise<void> {
 		await this.gameStateRepository.setAnswerVisible(answerId);
+		await this.publishGameState();
 	}
 	async setPlayingTeam(team: OptionalTeamName) {
 		const currentRound = await this.gameStateRepository.getCurrentRound();

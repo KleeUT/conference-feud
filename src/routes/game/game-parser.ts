@@ -1,6 +1,7 @@
 import type { OptionalTeamName, StoredGameState, StoredRound } from '$lib/services/game/types';
 
 export function parse(str: string): StoredGameState {
+	console.log({ str });
 	const gameState = JSON.parse(str) as { gameState: StoredGameState };
 	return gameState.gameState;
 }

@@ -20,7 +20,6 @@ export class ServerSentEventSender {
 		await Promise.all(
 			this.streams.keys().map(async (key) => {
 				try {
-					console.log('About to write');
 					const stream = this.streams.get(key);
 					if (!stream) {
 						return;
@@ -32,7 +31,7 @@ export class ServerSentEventSender {
 							// stream errored
 							this.streams.delete(key);
 						});
-					console.log('Wrote');
+
 					// eslint-disable-next-line @typescript-eslint/no-unused-vars
 				} catch (e) {
 					// stream errored

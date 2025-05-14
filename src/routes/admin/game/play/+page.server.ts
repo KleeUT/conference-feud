@@ -62,12 +62,11 @@ export const load: PageServerLoad = async ({ platform, cookies }) => {
 
 export const actions: Actions = {
 	answer: async (event) => {
-		const { gameService, validateSession, sseSender } = setup(event.platform);
+		const { gameService, validateSession } = setup(event.platform);
 		await validateSession(event.cookies);
 		const formData = await event.request.formData();
 		const answerId = formData.get('answerId') as string;
 		await gameService.setAnswerVisible(answerId);
-		sseSender.send({ msg: 'answer', answerId });
 	},
 	wrongGuess: async (event) => {
 		const { gameService, validateSession } = setup(event.platform);

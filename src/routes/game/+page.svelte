@@ -23,6 +23,7 @@
 			if (done) break;
 			console.log('received: ', value);
 			gameState = parse(value);
+			console.log('gameState: ', gameState);
 		}
 	});
 </script>
