@@ -168,10 +168,7 @@ export class D1GameStateRepository {
 			.run();
 	}
 	setRound(playOrder: number) {
-		this.db
-			.prepare('UPDATE Game SET currentRound = ? WHERE currentRound = 0')
-			.bind(playOrder)
-			.run();
+		this.db.prepare('UPDATE Game SET currentRound = ?').bind(playOrder).run();
 	}
 	endRound(id: string, winningTeam: OptionalTeamName) {
 		this.db
