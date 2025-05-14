@@ -9,7 +9,7 @@
 
 	const { data } = $props();
 	const { question, hasNextQuestion } = data;
-	let text = $state('fs');
+	let text = $state('');
 </script>
 
 <div class="container">
