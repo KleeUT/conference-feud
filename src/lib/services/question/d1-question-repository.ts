@@ -1,3 +1,4 @@
+import { retry } from '$lib/utils/retry';
 import type { Question } from './question';
 import { QuestionId } from './question-id';
 import type { QuestionRepository } from './question-repository';
@@ -5,18 +6,20 @@ import type { QuestionRepository } from './question-repository';
 export class D1QuestionRepository implements QuestionRepository {
 	constructor(private readonly db: D1Database) {}
 	async storeQuestion(question: Question): Promise<void> {
-		const res = await this.db
-			.prepare('INSERT INTO Question (questionId, questionText, surveyOrder) values (?,?,?)')
-			.bind(question.id.value, question.text, question.surveyOrder)
-			.run();
+		const res = await retry(() =>
+			this.db
+				.prepare('INSERT INTO Question (questionId, questionText, surveyOrder) values (?,?,?)')
+				.bind(question.id.value, question.text, question.surveyOrder)
+				.run()
+		);
 		if (!res.success) {
 			console.error(res.error);
 		}
 	}
 	async getAllQuestions(): Promise<Array<Question>> {
-		const res = await this.db
-			.prepare('SELECT questionId, questionText, surveyOrder FROM Question')
-			.all();
+		const res = await retry(() =>
+			this.db.prepare('SELECT questionId, questionText, surveyOrder FROM Question').all()
+		);
 		if (!res.success) {
 			console.error(res.error);
 		}
@@ -30,10 +33,9 @@ export class D1QuestionRepository implements QuestionRepository {
 	}
 
 	async deleteQuestion(questionId: QuestionId): Promise<void> {
-		const res = await this.db
-			.prepare('DELETE FROM Question WHERE questionId=?')
-			.bind(questionId.value)
-			.all();
+		const res = await retry(() =>
+			this.db.prepare('DELETE FROM Question WHERE questionId=?').bind(questionId.value).all()
+		);
 		if (!res.success) {
 			console.error(res.error);
 		}

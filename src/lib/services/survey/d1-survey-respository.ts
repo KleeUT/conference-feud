@@ -1,5 +1,6 @@
 import { CouldBeAnError } from '$lib/types/could-be-an-error';
 import type { SurveyId } from '$lib/types/survey-id';
+import { retry } from '$lib/utils/retry';
 import { QuestionId } from '../question';
 import type { SurveyRepository } from './survey-repository';
 import type { SurveyResponse } from './survey-response';
@@ -18,12 +19,14 @@ export class D1SurveyRepository implements SurveyRepository {
 		submissionTime: Date;
 	}): Promise<CouldBeAnError<void>> {
 		const timeStamp: number = submissionTime.valueOf();
-		const response = await this.db
-			.prepare(
-				'INSERT INTO Survey (questionId, surveyId, response, submissionTime) VALUES (?,?,?,?)'
-			)
-			.bind(questionId.value, surveyId.value, answer, timeStamp)
-			.run();
+		const response = await retry(() =>
+			this.db
+				.prepare(
+					'INSERT INTO Survey (questionId, surveyId, response, submissionTime) VALUES (?,?,?,?)'
+				)
+				.bind(questionId.value, surveyId.value, answer, timeStamp)
+				.run()
+		);
 		if (!response.success) {
 			return CouldBeAnError.withError(
 				response.error ||
@@ -35,10 +38,12 @@ export class D1SurveyRepository implements SurveyRepository {
 		return CouldBeAnError.withNoValue();
 	}
 	async load(surveyId: SurveyId): Promise<CouldBeAnError<Array<SurveyResponse>>> {
-		const response = await this.db
-			.prepare('SELECT questionId, surveyId, response FROM Survey WHERE surveyId = ?')
-			.bind(surveyId.value)
-			.all();
+		const response = await retry(() =>
+			this.db
+				.prepare('SELECT questionId, surveyId, response FROM Survey WHERE surveyId = ?')
+				.bind(surveyId.value)
+				.all()
+		);
 
 		if (!response.success) {
 			return CouldBeAnError.withError(
@@ -57,11 +62,13 @@ export class D1SurveyRepository implements SurveyRepository {
 	}
 
 	async loadAll(): Promise<CouldBeAnError<Array<SurveyResponse>>> {
-		const response = await this.db
-			.prepare(
-				'SELECT Survey.questionId, Survey.response, Survey.surveyId, SurveyMapping.mapping FROM Survey LEFT JOIN SurveyMapping ON Survey.questionId = SurveyMapping.questionId AND Survey.response = SurveyMapping.response'
-			)
-			.all();
+		const response = await retry(() =>
+			this.db
+				.prepare(
+					'SELECT Survey.questionId, Survey.response, Survey.surveyId, SurveyMapping.mapping FROM Survey LEFT JOIN SurveyMapping ON Survey.questionId = SurveyMapping.questionId AND Survey.response = SurveyMapping.response'
+				)
+				.all()
+		);
 
 		if (!response.success) {
 			return CouldBeAnError.withError(response.error || new Error(`Unkown error querying survey `));
@@ -87,17 +94,19 @@ export class D1SurveyRepository implements SurveyRepository {
 		newMapping: string;
 	}): Promise<CouldBeAnError<void>> {
 		try {
-			const response = await this.db
-				.prepare(
-					'INSERT INTO SurveyMapping(questionId, response, mapping) ' +
-						'VALUES(?, ?, ?) ' +
-						'ON CONFLICT(questionId, response) ' +
-						'DO ' +
-						'   UPDATE SET mapping = ? ' +
-						'   WHERE questionId = ? and response = ?;'
-				)
-				.bind(questionId.value, answerText, newMapping, newMapping, questionId.value, answerText)
-				.run();
+			const response = await retry(() =>
+				this.db
+					.prepare(
+						'INSERT INTO SurveyMapping(questionId, response, mapping) ' +
+							'VALUES(?, ?, ?) ' +
+							'ON CONFLICT(questionId, response) ' +
+							'DO ' +
+							'   UPDATE SET mapping = ? ' +
+							'   WHERE questionId = ? and response = ?;'
+					)
+					.bind(questionId.value, answerText, newMapping, newMapping, questionId.value, answerText)
+					.run()
+			);
 			if (!response.success) {
 				console.error('Error updating mapping', response.error);
 				return CouldBeAnError.withError(

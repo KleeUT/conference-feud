@@ -1,3 +1,4 @@
+import { retry } from '$lib/utils/retry';
 import type { Session } from './session';
 
 export class D1SessionStore {
@@ -8,10 +9,9 @@ export class D1SessionStore {
 	}
 
 	async getSession(sessionId: string): Promise<Session | null> {
-		const result = await this.db
-			.prepare('SELECT * FROM SessionStore WHERE session_id = ?')
-			.bind(sessionId)
-			.first();
+		const result = await retry(() =>
+			this.db.prepare('SELECT * FROM SessionStore WHERE session_id = ?').bind(sessionId).first()
+		);
 
 		if (!result) {
 			return null;
@@ -26,11 +26,13 @@ export class D1SessionStore {
 	}
 
 	async storeSession(session: Session): Promise<void> {
-		await this.db
-			.prepare(
-				'INSERT INTO SessionStore (session_id, user_id, expires_at, name) VALUES (?, ?, ?, ?)'
-			)
-			.bind(session.sessionId, session.userId, session.expiresAt.valueOf(), session.name)
-			.run();
+		await retry(() =>
+			this.db
+				.prepare(
+					'INSERT INTO SessionStore (session_id, user_id, expires_at, name) VALUES (?, ?, ?, ?)'
+				)
+				.bind(session.sessionId, session.userId, session.expiresAt.valueOf(), session.name)
+				.run()
+		);
 	}
 }
