@@ -36,24 +36,33 @@ export const actions: Actions = {
 		const data = await event.request.formData();
 		const answer = data.get('answer')?.toString();
 		const questionId = data.get('questionId');
-		const surveyIdCookieValue = event.cookies.get(surveyIdCookieKey);
-		if (!surveyIdCookieValue) {
-			return fail(401, { error: 'no cookie' });
+		try {
+			const surveyIdCookieValue = event.cookies.get(surveyIdCookieKey);
+			if (!surveyIdCookieValue) {
+				return fail(401, { error: 'no cookie' });
+			}
+			if (!answer) {
+				return fail(400, { answer, mising: true, error: 'Missing answer' });
+			}
+			if (!questionId) {
+				return fail(400, { questionId, mising: true, error: 'Missing questionId' });
+			}
+			if (answer.length > 50) {
+				return fail(400, { answer, error: 'Answer length too long' });
+			}
+			const { surveyService } = setup(event.platform);
+			await surveyService.storeAnswer({
+				surveyId: surveyIdCookieValue,
+				questionId: questionId.toString(),
+				answer: answer.toString()
+			});
+		} catch (e) {
+			console.error(e);
+			return fail(500, {
+				error: 'Your answer is great but my database is not.',
+				answer,
+				questionId
+			});
 		}
-		if (!answer) {
-			return fail(400, { answer, mising: true, error: 'Missing answer' });
-		}
-		if (!questionId) {
-			return fail(400, { questionId, mising: true, error: 'Missing questionId' });
-		}
-		if (answer.length > 50) {
-			return fail(400, { answer, error: 'Answer length too long' });
-		}
-		const { surveyService } = setup(event.platform);
-		await surveyService.storeAnswer({
-			surveyId: surveyIdCookieValue,
-			questionId: questionId.toString(),
-			answer: answer.toString()
-		});
 	}
 };

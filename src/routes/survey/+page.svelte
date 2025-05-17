@@ -7,9 +7,9 @@
 
 	interface Props {}
 
-	const { data } = $props();
+	const { data, form } = $props();
 	const { question, hasNextQuestion } = data;
-	let text = $state('');
+	let text = $state(form?.answer || '');
 </script>
 
 <div class="container">
@@ -21,6 +21,9 @@
 				<TextInput hidden name="questionId" value={question.questionId}></TextInput>
 				<Margin marginTop="1">
 					<TextInput maxLength={50} name="answer" bind:value={text} required></TextInput>
+					{#if form?.error}
+						<p class="error_message">{form.error}<br />Please try again.</p>
+					{/if}
 				</Margin>
 				<Margin marginTop="1">
 					{#if text.length > 0 && text.length <= 50}
@@ -44,5 +47,10 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
+	}
+	.error_message {
+		color: red;
+		font-size: 0.8rem;
+		text-align: center;
 	}
 </style>
