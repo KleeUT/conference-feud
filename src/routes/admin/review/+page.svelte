@@ -5,9 +5,9 @@
 	import AnswerMappingDisplay from './answer-mapping-display.svelte';
 
 	const { data } = $props();
-	const { question } = data;
-	const { topMapped } = question;
-	const topCategories = Object.entries(topMapped).sort((x, y) => y[1] - x[1]);
+	const topCategories = $derived(
+		Object.entries(data.question.topMapped).sort((x, y) => y[1] - x[1])
+	);
 </script>
 
 <div class="container">

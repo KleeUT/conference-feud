@@ -23,6 +23,7 @@ export const load: PageServerLoad = async (event) => {
 		);
 	}
 
+	console.log({ questionId, questionIndex, question: surveyResponses[questionIndex].questionId });
 	return {
 		question: await flattenQuestion(questionService, surveyResponses[questionIndex]),
 		nextQuestion: surveyResponses[questionIndex + 1]
