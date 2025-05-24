@@ -54,7 +54,7 @@ export const actions: Actions = {
 			await surveyService.storeAnswer({
 				surveyId: surveyIdCookieValue,
 				questionId: questionId.toString(),
-				answer: answer.toString()
+				answer: answer.trim()
 			});
 		} catch (e) {
 			console.error(e);
